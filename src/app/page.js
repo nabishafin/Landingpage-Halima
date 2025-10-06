@@ -4,6 +4,8 @@ import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import ServicesSection from "@/components/ServicesSection";
 import { StepsSection } from "@/components/StepsSection";
+import { CompanyLogos } from "@/components/CompanyLogos";
+import { HowWeWorkSection } from "@/components/HowWeWorkSection";
 
 export default function Home() {
   useLocoScroll();
@@ -16,6 +18,13 @@ export default function Home() {
 
       <section data-scroll-section>
         <StepsSection />
+      </section>
+
+      <section data-scroll-section>
+        <CompanyLogos />
+      </section>
+      <section data-scroll-section>
+        <HowWeWorkSection />
       </section>
       <section id="about" data-scroll-section>
         <AboutSection />

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { CirclePlus } from "lucide-react";
+import EnquireButton from "./ui/EnquireButtton";
 
 export function StepsSection() {
   const steps = [
@@ -38,14 +39,14 @@ export function StepsSection() {
   ];
 
   return (
-    <section id="you" className="px-4">
+    <section id="you" className="px-4 w-auto lg:w-11/12 mx-auto ">
       {/* Top Section */}
-      <section className="flex items-center justify-center px-6 py-20">
-        <div className="w-full lg:w-11/12 mx-auto text-center">
+      <section className="flex items-center justify-center mt-10">
+        <div className="w-full  mx-auto text-center">
           <div className="flex items-center justify-start gap-2 mb-4">
             <CirclePlus className="w-6 h-6 text-[#686868] font-bold" />
             <span className="text-lg md:text-2xl font-semibold text-[#686868]">
-              We've met you before
+              What We Do
             </span>
           </div>
 
@@ -67,8 +68,36 @@ export function StepsSection() {
         </div>
       </section>
 
+      <div className="w-full md:max-w-2/12 my-10 mx-auto">
+        <EnquireButton />
+      </div>
+      <section className="flex items-center justify-center mt-10">
+        <div className="w-full  mx-auto text-center">
+          <div className="flex items-center justify-start gap-2 mb-4">
+            <CirclePlus className="w-6 h-6 text-[#686868] font-bold" />
+            <span className="text-lg md:text-2xl font-semibold text-[#686868]">
+              Our Services
+            </span>
+          </div>
+
+          {/* Main heading */}
+          <motion.h1
+            className="text-xl mb-10 "
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <span className="text-black">
+              Delivered through five strategic pillars. <br />
+              These are the ways we partner with you to build, grow, and sustain
+              your brand.
+            </span>
+          </motion.h1>
+        </div>
+      </section>
       {/* Steps Grid */}
-      <div className="w-auto lg:w-11/12 mx-auto">
+      <div className="">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
           {steps.map((step, index) => (
             <motion.div
