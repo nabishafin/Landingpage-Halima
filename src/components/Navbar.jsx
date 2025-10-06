@@ -10,16 +10,16 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-green-700">MyLanding</h1>
-        <ul className="flex gap-6 text-gray-700 font-medium">
+    <nav className=" shadow-md  fixed top-0 w-full z-[9999] bg-black/80 backdrop-blur-sm">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center ">
+        <h1 className="text-2xl font-bold text-white">MyLanding</h1>
+        <ul className="flex gap-6 text-white font-medium">
           <li>
             <Link
               to="hero"
               smooth
               duration={800}
-              className="cursor-pointer hover:text-green-600"
+              className="cursor-pointer hover:text-white"
             >
               Home
             </Link>
@@ -29,7 +29,7 @@ export default function Navbar() {
               to="about"
               smooth
               duration={800}
-              className="cursor-pointer hover:text-green-600"
+              className="cursor-pointer hover:text-white"
             >
               About
             </Link>
@@ -39,7 +39,7 @@ export default function Navbar() {
               to="services"
               smooth
               duration={800}
-              className="cursor-pointer hover:text-green-600"
+              className="cursor-pointer hover:text-white"
             >
               Services
             </Link>
@@ -49,7 +49,7 @@ export default function Navbar() {
               to="footer"
               smooth
               duration={800}
-              className="cursor-pointer hover:text-green-600"
+              className="cursor-pointer hover:text-white"
             >
               Contact
             </Link>
