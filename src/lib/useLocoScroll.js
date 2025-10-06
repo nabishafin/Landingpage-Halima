@@ -16,6 +16,10 @@ export default function useLocoScroll() {
       const scroll = new LocomotiveScroll({
         el: scrollEl,
         smooth: true,
+        multiplier: 1.2,
+        lerp: 0.08,
+        smartphone: { smooth: true },
+        tablet: { smooth: true },
         lerp: 0.07,
       });
 
