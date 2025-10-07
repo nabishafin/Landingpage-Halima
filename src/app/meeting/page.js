@@ -137,8 +137,13 @@ const MeetingPage = () => {
   };
 
   const handleTimeSelect = (time) => {
+    if (!timezoneInfo.name) {
+      setError("Please select a timezone before choosing a time.");
+      return;
+    }
     setSelectedTime(time);
     setShowQuestionnaire(true);
+    setError("");
   };
 
   const handleInputChange = (e) =>
@@ -154,12 +159,13 @@ const MeetingPage = () => {
   const handleQuestionnaireSubmit = (e) => {
     e.preventDefault();
 
-    // Validate brand description has minimum 20 words
+    // Validate brand description has minimum 5 words (reduced from 20)
     const wordCount = questionnaireData.brandDescription
       .trim()
-      .split(/\s+/).length;
-    if (wordCount < 20) {
-      setError("Please provide at least 20 words about your brand.");
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
+    if (wordCount < 5) {
+      setError("Please provide at least 5 words about your brand.");
       return;
     }
 
@@ -355,22 +361,6 @@ const MeetingPage = () => {
               )}
             </div>
           )}
-          <div className="mb-10">
-            <p className="font-bold text-lg mb-3 text-gray-900">
-              Relevant links
-            </p>
-            <ul className="text-base text-gray-700 space-y-2">
-              <li className="hover:text-gray-900 cursor-pointer">
-                ⭐ Client Reviews
-              </li>
-              <li className="hover:text-gray-900 cursor-pointer">
-                📊 Pricing & Plans
-              </li>
-              <li className="hover:text-gray-900 cursor-pointer">
-                📸 Examples of our work
-              </li>
-            </ul>
-          </div>
         </div>
 
         {/* Right Content */}
@@ -439,13 +429,14 @@ const MeetingPage = () => {
                   {/* Timezone */}
                   <div className="mt-6">
                     <label className="text-sm font-semibold mb-2 text-gray-900 block">
-                      Select Timezone
+                      Select Timezone *
                     </label>
                     <select
                       value={timezoneInfo.name}
                       onChange={(e) =>
                         setTimezoneInfo({ name: e.target.value })
                       }
+                      required
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     >
                       <option value="">Select a timezone</option>
@@ -455,6 +446,9 @@ const MeetingPage = () => {
                         </option>
                       ))}
                     </select>
+                    {error && !timezoneInfo.name && (
+                      <p className="text-red-500 text-xs mt-1">{error}</p>
+                    )}
                   </div>
                 </div>
 
@@ -465,16 +459,27 @@ const MeetingPage = () => {
                       <p className="font-semibold text-gray-900 mb-4">
                         {formatSelectedDate()}
                       </p>
+                      {error && !timezoneInfo.name && (
+                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+                          {error}
+                        </div>
+                      )}
                       <div className="space-y-2 max-h-96 overflow-y-auto pr-2">
                         {timeSlots.map((time) => (
                           <button
                             key={time}
                             onClick={() => handleTimeSelect(time)}
+                            disabled={!timezoneInfo.name}
                             className={`w-full text-left px-4 py-3 border rounded-lg font-medium transition-colors
                               ${
                                 selectedTime === time
                                   ? "bg-gray-800 text-white border-gray-800"
                                   : "border-gray-400 text-gray-800 hover:bg-gray-100"
+                              }
+                              ${
+                                !timezoneInfo.name
+                                  ? "opacity-50 cursor-not-allowed"
+                                  : ""
                               }
                             `}
                           >
@@ -514,7 +519,7 @@ const MeetingPage = () => {
                 {/* Question 1 */}
                 <div>
                   <label className="block text-sm font-medium mb-2 text-gray-900">
-                    1. Tell us a little about your brand. (20 words minimum) *
+                    1. Tell us a little about your brand. (5 words minimum) *
                   </label>
                   <textarea
                     value={questionnaireData.brandDescription}
@@ -540,8 +545,8 @@ const MeetingPage = () => {
                     {questionnaireData.brandDescription
                       .trim()
                       .split(/\s+/)
-                      .filter((word) => word.length > 0).length < 20 &&
-                      ` (minimum 20 words required)`}
+                      .filter((word) => word.length > 0).length < 5 &&
+                      ` (minimum 5 words required)`}
                   </p>
                 </div>
 

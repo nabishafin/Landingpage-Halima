@@ -35,7 +35,7 @@ export default function Home() {
       <section>
         <HowWeWorkSection />
       </section>
-      <section>
+      <section id="reviews">
         <ClientTestimonialsSection />
       </section>
       <section id="us">

@@ -17,8 +17,8 @@ const Navbar = () => {
 
   const navItems = [
     { to: "you", label: "You" },
-    { to: "clients", label: "Clients" },
     { to: "us", label: "Us" },
+    { to: "reviews", label: "Reviews" },
     { to: "contact", label: "Contact" },
   ];
 
@@ -63,16 +63,19 @@ const Navbar = () => {
               aria-label="Toggle mobile menu"
             >
               <span
-                className={`block w-6 h-0.5 bg-white transition-transform duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2" : ""
-                  }`}
+                className={`block w-6 h-0.5 bg-white transition-transform duration-300 ${
+                  isMobileMenuOpen ? "rotate-45 translate-y-2" : ""
+                }`}
               />
               <span
-                className={`block w-6 h-0.5 bg-white transition-opacity duration-300 ${isMobileMenuOpen ? "opacity-0" : ""
-                  }`}
+                className={`block w-6 h-0.5 bg-white transition-opacity duration-300 ${
+                  isMobileMenuOpen ? "opacity-0" : ""
+                }`}
               />
               <span
-                className={`block w-6 h-0.5 bg-white transition-transform duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
-                  }`}
+                className={`block w-6 h-0.5 bg-white transition-transform duration-300 ${
+                  isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
+                }`}
               />
             </button>
           </div>
@@ -80,8 +83,9 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         <div
-          className={`md:hidden bg-black/90 backdrop-blur-sm transition-all duration-300 overflow-hidden ${isMobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
-            }`}
+          className={`md:hidden bg-black/90 backdrop-blur-sm transition-all duration-300 overflow-hidden ${
+            isMobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+          }`}
         >
           <div className="px-6 py-4 space-y-4">
             {navItems.map((item) => (
