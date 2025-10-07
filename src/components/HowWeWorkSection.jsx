@@ -40,7 +40,7 @@ export function HowWeWorkSection() {
           viewport={{ once: true, amount: 0.3 }}
           className="space-y-6"
         >
-          <h2 className="text-4xl lg:text-6xl font-bold leading-tight">
+          <h2 className="text-4xl lg:text-5xl font-bold leading-tight">
             How We Work <br />
             <span className="text-white">with you</span>
           </h2>

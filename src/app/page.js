@@ -6,6 +6,7 @@ import ServicesSection from "@/components/ServicesSection";
 import { StepsSection } from "@/components/StepsSection";
 import { CompanyLogos } from "@/components/CompanyLogos";
 import { HowWeWorkSection } from "@/components/HowWeWorkSection";
+import { TestimonialSection } from "@/components/TestimonialSection";
 
 export default function Home() {
   useLocoScroll();
@@ -23,6 +24,10 @@ export default function Home() {
       <section data-scroll-section>
         <CompanyLogos />
       </section>
+
+      {/* <section data-scroll-section>
+        <TestimonialSection />
+      </section>
       <section data-scroll-section>
         <HowWeWorkSection />
       </section>
@@ -31,7 +36,7 @@ export default function Home() {
       </section>
       <section id="services" data-scroll-section>
         <ServicesSection />
-      </section>
+      </section> */}
     </main>
   );
 }
