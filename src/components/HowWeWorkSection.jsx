@@ -1,10 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button"; // optional if using shadcn
+import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function HowWeWorkSection() {
+  const router = useRouter();
+
   const workSteps = [
     {
       id: 1,
@@ -89,7 +92,10 @@ export function HowWeWorkSection() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            <Button className="mt-4 bg-white w-full  md:w-80 text-black  py-3 rounded-full font-semibold flex items-center gap-2 hover:bg-gray-200 transition">
+            <Button
+              onClick={() => router.push("/meeting")}
+              className="mt-4 bg-white w-full md:w-80 text-black py-3 rounded-full font-semibold flex items-center gap-2 hover:bg-gray-200 transition"
+            >
               Enquire <ArrowRight size={18} />
             </Button>
           </motion.div>
