@@ -202,7 +202,7 @@ const MeetingPage = () => {
             Meeting Scheduled!
           </h2>
           <p className="text-gray-600 mb-6">
-            Your meeting has been successfully scheduled. You'll receive a
+            Your meeting has been successfully scheduled. You&apos;ll receive a
             confirmation email shortly.
           </p>
           <div className="space-y-3">
