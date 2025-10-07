@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
       <body className="bg-white text-gray-900">
         <Navbar />
         {children}
-        {/* <Footer /> */}
+        <Footer />
         <ConnectButton />
       </body>
     </html>

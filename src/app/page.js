@@ -1,5 +1,5 @@
 "use client";
-import useLocoScroll from "@/lib/useLocoScroll";
+import useLenis from "@/lib/useLenis";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import ServicesSection from "@/components/ServicesSection";
@@ -9,34 +9,34 @@ import { HowWeWorkSection } from "@/components/HowWeWorkSection";
 import { TestimonialSection } from "@/components/TestimonialSection";
 
 export default function Home() {
-  useLocoScroll();
+  useLenis();
 
   return (
-    <main className="bg-[#F5F5F5]" data-scroll-container>
-      <section id="hero" data-scroll-section>
+    <main className="bg-[#F5F5F5]">
+      <section id="hero">
         <HeroSection />
       </section>
 
-      <section data-scroll-section>
+      <section>
         <StepsSection />
       </section>
 
-      <section data-scroll-section>
+      <section>
         <CompanyLogos />
       </section>
 
-      {/* <section data-scroll-section>
+      <section>
         <TestimonialSection />
       </section>
-      <section data-scroll-section>
+      <section>
         <HowWeWorkSection />
       </section>
-      <section id="about" data-scroll-section>
+      <section id="about">
         <AboutSection />
       </section>
-      <section id="services" data-scroll-section>
+      <section id="services">
         <ServicesSection />
-      </section> */}
+      </section>
     </main>
   );
 }
