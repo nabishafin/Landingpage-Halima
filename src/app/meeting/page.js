@@ -15,6 +15,7 @@ const MeetingPage = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -25,6 +26,13 @@ const MeetingPage = () => {
     email: "",
     phone: "",
     additionalInfo: "",
+  });
+
+  const [questionnaireData, setQuestionnaireData] = useState({
+    brandDescription: "",
+    currentPriority: "",
+    businessStage: "",
+    budgetAllocated: "",
   });
 
   const [timezoneInfo, setTimezoneInfo] = useState({ name: "" });
@@ -61,6 +69,25 @@ const MeetingPage = () => {
     "4:30 PM",
     "5:00 PM",
     "5:30 PM",
+  ];
+
+  const priorityOptions = [
+    "Establishing clarity and brand identity",
+    "Expanding visibility and growth",
+    "Scaling with structure and long-term systems",
+  ];
+
+  const businessStageOptions = [
+    "Idea / Pre-launch",
+    "Early-stage startup (0–2 years)",
+    "Growing brand (2–5 years)",
+    "Established business (5+ years)",
+  ];
+
+  const budgetOptions = [
+    "Yes, we have resources set aside",
+    "We are exploring options and planning budget",
+    "Not at this time",
   ];
 
   const getDaysInMonth = (date) => {
@@ -105,16 +132,50 @@ const MeetingPage = () => {
       setSelectedDate(selected);
       setSelectedTime(null);
       setShowForm(false);
+      setShowQuestionnaire(false);
     }
   };
 
   const handleTimeSelect = (time) => {
     setSelectedTime(time);
-    setShowForm(true);
+    setShowQuestionnaire(true);
   };
 
   const handleInputChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleQuestionnaireChange = (field, value) => {
+    setQuestionnaireData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleQuestionnaireSubmit = (e) => {
+    e.preventDefault();
+
+    // Validate brand description has minimum 20 words
+    const wordCount = questionnaireData.brandDescription
+      .trim()
+      .split(/\s+/).length;
+    if (wordCount < 20) {
+      setError("Please provide at least 20 words about your brand.");
+      return;
+    }
+
+    if (
+      !questionnaireData.currentPriority ||
+      !questionnaireData.businessStage ||
+      !questionnaireData.budgetAllocated
+    ) {
+      setError("Please answer all questions.");
+      return;
+    }
+
+    setShowQuestionnaire(false);
+    setShowForm(true);
+    setError("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -146,6 +207,8 @@ const MeetingPage = () => {
           time: selectedTime,
           timezone: timezoneInfo.name,
           additionalInfo: formData.additionalInfo,
+          // Include questionnaire data
+          questionnaire: questionnaireData,
         }),
       });
       const result = await response.json();
@@ -157,6 +220,12 @@ const MeetingPage = () => {
           email: "",
           phone: "",
           additionalInfo: "",
+        });
+        setQuestionnaireData({
+          brandDescription: "",
+          currentPriority: "",
+          businessStage: "",
+          budgetAllocated: "",
         });
       } else {
         setError("Failed to schedule meeting. Please try again.");
@@ -212,6 +281,7 @@ const MeetingPage = () => {
                 setSelectedDate(null);
                 setSelectedTime(null);
                 setShowForm(false);
+                setShowQuestionnaire(false);
               }}
               className="w-full bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900 font-semibold transition-colors"
             >
@@ -305,7 +375,7 @@ const MeetingPage = () => {
 
         {/* Right Content */}
         <div className="flex-1 p-8">
-          {!showForm ? (
+          {!showQuestionnaire && !showForm ? (
             <>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Select a Date & Time
@@ -421,13 +491,172 @@ const MeetingPage = () => {
                 </div>
               </div>
             </>
+          ) : showQuestionnaire ? (
+            <div>
+              <button
+                onClick={() => setShowQuestionnaire(false)}
+                className="flex items-center gap-2 text-gray-800 mb-6 hover:underline transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" /> Back to time selection
+              </button>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Tell Us About Your Business
+              </h2>
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+                  {error}
+                </div>
+              )}
+              <form
+                onSubmit={handleQuestionnaireSubmit}
+                className="space-y-6 max-w-2xl"
+              >
+                {/* Question 1 */}
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-900">
+                    1. Tell us a little about your brand. (20 words minimum) *
+                  </label>
+                  <textarea
+                    value={questionnaireData.brandDescription}
+                    onChange={(e) =>
+                      handleQuestionnaireChange(
+                        "brandDescription",
+                        e.target.value
+                      )
+                    }
+                    required
+                    rows={4}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                    placeholder="Describe your brand, products/services, target audience, and what makes you unique..."
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    {
+                      questionnaireData.brandDescription
+                        .trim()
+                        .split(/\s+/)
+                        .filter((word) => word.length > 0).length
+                    }{" "}
+                    words
+                    {questionnaireData.brandDescription
+                      .trim()
+                      .split(/\s+/)
+                      .filter((word) => word.length > 0).length < 20 &&
+                      ` (minimum 20 words required)`}
+                  </p>
+                </div>
+
+                {/* Question 2 */}
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-900">
+                    2. Which area best describes your current priority? *
+                  </label>
+                  <div className="space-y-2">
+                    {priorityOptions.map((option) => (
+                      <label
+                        key={option}
+                        className="flex items-center space-x-3 cursor-pointer"
+                      >
+                        <input
+                          type="radio"
+                          name="currentPriority"
+                          value={option}
+                          checked={questionnaireData.currentPriority === option}
+                          onChange={(e) =>
+                            handleQuestionnaireChange(
+                              "currentPriority",
+                              e.target.value
+                            )
+                          }
+                          className="text-gray-800 focus:ring-gray-500"
+                          required
+                        />
+                        <span className="text-sm text-gray-700">{option}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Question 3 */}
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-900">
+                    3. What stage is your business at? *
+                  </label>
+                  <div className="space-y-2">
+                    {businessStageOptions.map((option) => (
+                      <label
+                        key={option}
+                        className="flex items-center space-x-3 cursor-pointer"
+                      >
+                        <input
+                          type="radio"
+                          name="businessStage"
+                          value={option}
+                          checked={questionnaireData.businessStage === option}
+                          onChange={(e) =>
+                            handleQuestionnaireChange(
+                              "businessStage",
+                              e.target.value
+                            )
+                          }
+                          className="text-gray-800 focus:ring-gray-500"
+                          required
+                        />
+                        <span className="text-sm text-gray-700">{option}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Question 4 */}
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-900">
+                    4. Do you have a budget allocated for brand strategy and
+                    creative direction? *
+                  </label>
+                  <div className="space-y-2">
+                    {budgetOptions.map((option) => (
+                      <label
+                        key={option}
+                        className="flex items-center space-x-3 cursor-pointer"
+                      >
+                        <input
+                          type="radio"
+                          name="budgetAllocated"
+                          value={option}
+                          checked={questionnaireData.budgetAllocated === option}
+                          onChange={(e) =>
+                            handleQuestionnaireChange(
+                              "budgetAllocated",
+                              e.target.value
+                            )
+                          }
+                          className="text-gray-800 focus:ring-gray-500"
+                          required
+                        />
+                        <span className="text-sm text-gray-700">{option}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-gray-800 text-white py-3 rounded-lg hover:bg-gray-900 font-semibold transition-colors"
+                >
+                  Continue to Details
+                </button>
+              </form>
+            </div>
           ) : (
             <div>
               <button
-                onClick={() => setShowForm(false)}
+                onClick={() => {
+                  setShowForm(false);
+                  setShowQuestionnaire(true);
+                }}
                 className="flex items-center gap-2 text-gray-800 mb-6 hover:underline transition-colors"
               >
-                <ChevronLeft className="w-4 h-4" /> Back to calendar
+                <ChevronLeft className="w-4 h-4" /> Back to questions
               </button>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Enter Your Details

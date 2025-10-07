@@ -44,9 +44,9 @@ export async function POST(req) {
     let emailSubject = "";
     let emailHtml = "";
 
-    // Check if it's a meeting scheduling request
-    if (data.date && data.time) {
-      // Meeting scheduling email
+    // Check if it's a meeting scheduling request with questionnaire
+    if (data.date && data.time && data.questionnaire) {
+      // Meeting scheduling email with questionnaire
       const meetingDate = data.date
         ? new Date(data.date).toLocaleDateString("en-US", {
             weekday: "long",
@@ -84,7 +84,7 @@ export async function POST(req) {
               <tr>
                 <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Phone:</td>
                 <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
-                  data.phone
+                  data.phone || "Not provided"
                 }</td>
               </tr>
               <tr>
@@ -105,6 +105,37 @@ export async function POST(req) {
               </tr>
             </table>
           </div>
+
+          <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #007bff;">
+            <h3 style="color: #000; margin-top: 0;">Pre-Meeting Questionnaire</h3>
+            
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd; font-weight: bold; width: 180px; vertical-align: top;">Brand Description:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">${
+                  data.questionnaire.brandDescription || "Not provided"
+                }</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd; font-weight: bold; vertical-align: top;">Current Priority:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">${
+                  data.questionnaire.currentPriority || "Not provided"
+                }</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd; font-weight: bold; vertical-align: top;">Business Stage:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">${
+                  data.questionnaire.businessStage || "Not provided"
+                }</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd; font-weight: bold; vertical-align: top;">Budget Allocated:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">${
+                  data.questionnaire.budgetAllocated || "Not provided"
+                }</td>
+              </tr>
+            </table>
+          </div>
           
           <p style="color: #666; font-size: 14px; text-align: center;">
             This meeting was scheduled through your booking system.
@@ -114,7 +145,7 @@ export async function POST(req) {
     }
     // Check if it's a contact form request
     else if (data.name && data.email) {
-      // Contact form email
+      // Contact form email (existing code)
       emailSubject = `📧 New Contact Form Submission from ${data.name}`;
       emailHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
