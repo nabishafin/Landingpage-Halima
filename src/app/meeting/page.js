@@ -1,16 +1,23 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { Calendar, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useState } from "react";
+import {
+  Calendar,
+  Clock,
+  ChevronLeft,
+  ChevronRight,
+  ArrowLeft,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const MeetingPage = () => {
-  const [currentDate, setCurrentDate] = useState(new Date(2025, 9, 1));
+  const router = useRouter();
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
-  const [hydrated, setHydrated] = useState(false); // ✅ added
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -20,9 +27,20 @@ const MeetingPage = () => {
     additionalInfo: "",
   });
 
-  useEffect(() => {
-    setHydrated(true); // ✅ ensures client-only rendering for dynamic parts
-  }, []);
+  const [timezoneInfo, setTimezoneInfo] = useState({
+    name: "",
+  });
+
+  const timezones = [
+    { label: "Europe/London", value: "Europe/London" },
+    { label: "Europe/Berlin", value: "Europe/Berlin" },
+    { label: "Africa/Johannesburg", value: "Africa/Johannesburg" },
+    { label: "US/Eastern", value: "US/Eastern" },
+    { label: "US/Central", value: "US/Central" },
+    { label: "Asia/Dhaka", value: "Asia/Dhaka" },
+    { label: "Asia/Tokyo", value: "Asia/Tokyo" },
+    { label: "Australia/Sydney", value: "Australia/Sydney" },
+  ];
 
   const timeSlots = [
     "8:00 AM",
@@ -118,10 +136,15 @@ const MeetingPage = () => {
       return;
     }
 
+    if (!timezoneInfo.name) {
+      setError("Please select a timezone.");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const response = await fetch("/api/send-email", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -131,7 +154,7 @@ const MeetingPage = () => {
           phone: formData.phone,
           date: selectedDate.toISOString(),
           time: selectedTime,
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          timezone: timezoneInfo.name,
           additionalInfo: formData.additionalInfo,
         }),
       });
@@ -167,10 +190,9 @@ const MeetingPage = () => {
     });
   };
 
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const currentTime = hydrated
-    ? new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-    : ""; // ✅ prevents SSR mismatch
+  const handleBackToWebsite = () => {
+    router.push("/");
+  };
 
   if (success) {
     return (
@@ -191,22 +213,33 @@ const MeetingPage = () => {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold mb-2">Meeting Scheduled!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Meeting Scheduled!
+          </h2>
           <p className="text-gray-600 mb-6">
             Your meeting has been successfully scheduled. You'll receive a
             confirmation email shortly.
           </p>
-          <button
-            onClick={() => {
-              setSuccess(false);
-              setSelectedDate(null);
-              setSelectedTime(null);
-              setShowForm(false);
-            }}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
-          >
-            Schedule Another Meeting
-          </button>
+          <div className="space-y-3">
+            <button
+              onClick={() => {
+                setSuccess(false);
+                setSelectedDate(null);
+                setSelectedTime(null);
+                setShowForm(false);
+              }}
+              className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-semibold transition-colors"
+            >
+              Schedule Another Meeting
+            </button>
+            <button
+              onClick={handleBackToWebsite}
+              className="w-full flex items-center justify-center gap-2 text-gray-600 px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-50 font-semibold transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Website
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -217,13 +250,25 @@ const MeetingPage = () => {
       <div className="bg-white rounded-lg shadow-lg max-w-6xl w-full flex flex-col lg:flex-row">
         {/* Left Sidebar */}
         <div className="lg:w-80 p-8 border-r border-gray-200">
+          <div className="flex items-center gap-3 mb-6">
+            <button
+              onClick={handleBackToWebsite}
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="text-sm font-medium">Back to Website</span>
+            </button>
+          </div>
+
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
               <Calendar className="w-6 h-6 text-white" />
             </div>
             <div>
               <p className="text-sm text-gray-600">Feedbird</p>
-              <h1 className="text-xl font-bold">Feedbird Intro</h1>
+              <h1 className="text-xl font-bold text-gray-900">
+                Feedbird Intro
+              </h1>
             </div>
           </div>
 
@@ -232,7 +277,7 @@ const MeetingPage = () => {
             <span>20 min</span>
           </div>
 
-          <p className="text-sm text-gray-700 mb-4">
+          <p className="text-sm text-gray-700 mb-6">
             Book a{" "}
             <span className="font-semibold">free 20-min Google Meet call</span>{" "}
             to learn more about Feedbird and get any of your questions answered.
@@ -250,23 +295,35 @@ const MeetingPage = () => {
                     Selected Time
                   </p>
                   <p className="font-semibold text-blue-900">{selectedTime}</p>
-                  <p className="text-xs text-gray-500">{timeZone}</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {timezoneInfo.name}
+                  </p>
                 </>
               )}
             </div>
           )}
 
-          <div className="mt-8">
-            <p className="font-semibold text-sm mb-2">Relevant links</p>
+          <div className="mb-8">
+            <p className="font-semibold text-sm mb-2 text-gray-900">
+              Relevant links
+            </p>
             <ul className="text-sm text-blue-600 space-y-1">
-              <li>⭐ Client Reviews</li>
-              <li>📊 Pricing & Plans</li>
-              <li>📸 Examples of our work</li>
+              <li className="hover:text-blue-800 cursor-pointer">
+                ⭐ Client Reviews
+              </li>
+              <li className="hover:text-blue-800 cursor-pointer">
+                📊 Pricing & Plans
+              </li>
+              <li className="hover:text-blue-800 cursor-pointer">
+                📸 Examples of our work
+              </li>
             </ul>
           </div>
 
-          <div className="mt-8">
-            <p className="font-semibold text-sm mb-2">Not a good fit for:</p>
+          <div>
+            <p className="font-semibold text-sm mb-2 text-gray-900">
+              Not a good fit for:
+            </p>
             <ul className="text-sm text-red-600 space-y-1">
               <li>❌ Coaches & Consultants</li>
               <li>❌ Personal Brands</li>
@@ -278,25 +335,27 @@ const MeetingPage = () => {
         <div className="flex-1 p-8">
           {!showForm ? (
             <>
-              <h2 className="text-2xl font-bold mb-6">Select a Date & Time</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Select a Date & Time
+              </h2>
               <div className="grid lg:grid-cols-2 gap-8">
                 {/* Calendar */}
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <button
                       onClick={handlePrevMonth}
-                      className="p-2 hover:bg-gray-100 rounded"
+                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                     >
-                      <ChevronLeft className="w-5 h-5" />
+                      <ChevronLeft className="w-5 h-5 text-gray-600" />
                     </button>
-                    <h3 className="font-semibold">
+                    <h3 className="font-semibold text-gray-900">
                       {formatMonth(currentDate)}
                     </h3>
                     <button
                       onClick={handleNextMonth}
-                      className="p-2 hover:bg-gray-100 rounded"
+                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                     >
-                      <ChevronRight className="w-5 h-5" />
+                      <ChevronRight className="w-5 h-5 text-gray-600" />
                     </button>
                   </div>
 
@@ -319,10 +378,10 @@ const MeetingPage = () => {
                         key={idx}
                         onClick={() => handleDateSelect(day)}
                         disabled={!day.isCurrentMonth}
-                        className={`aspect-square flex items-center justify-center rounded-full text-sm
+                        className={`aspect-square flex items-center justify-center rounded-full text-sm font-medium transition-colors
                           ${
                             !day.isCurrentMonth
-                              ? "text-gray-300"
+                              ? "text-gray-300 cursor-not-allowed"
                               : "text-gray-900 hover:bg-gray-100"
                           }
                           ${
@@ -338,14 +397,24 @@ const MeetingPage = () => {
                     ))}
                   </div>
 
-                  <div className="mt-4">
-                    <p className="text-sm font-semibold mb-2">Time zone</p>
-                    <select className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                      <option>
-                        {hydrated
-                          ? `${timeZone} (${currentTime})`
-                          : `${timeZone}`}
-                      </option>
+                  {/* Timezone Dropdown */}
+                  <div className="mt-6">
+                    <label className="text-sm font-semibold mb-2 text-gray-900 block">
+                      Select Timezone
+                    </label>
+                    <select
+                      value={timezoneInfo.name}
+                      onChange={(e) =>
+                        setTimezoneInfo({ name: e.target.value })
+                      }
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    >
+                      <option value="">Select a timezone</option>
+                      {timezones.map((tz) => (
+                        <option key={tz.value} value={tz.value}>
+                          {tz.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -354,7 +423,7 @@ const MeetingPage = () => {
                 <div>
                   {selectedDate ? (
                     <>
-                      <p className="font-semibold mb-4">
+                      <p className="font-semibold text-gray-900 mb-4">
                         {formatSelectedDate()}
                       </p>
                       <div className="space-y-2 max-h-96 overflow-y-auto pr-2">
@@ -376,7 +445,7 @@ const MeetingPage = () => {
                       </div>
                     </>
                   ) : (
-                    <div className="flex items-center justify-center h-full text-gray-400">
+                    <div className="flex items-center justify-center h-full text-gray-400 text-sm">
                       Select a date to see available times
                     </div>
                   )}
@@ -387,20 +456,26 @@ const MeetingPage = () => {
             <div>
               <button
                 onClick={() => setShowForm(false)}
-                className="flex items-center gap-2 text-blue-600 mb-6 hover:underline"
+                className="flex items-center gap-2 text-blue-600 mb-6 hover:underline transition-colors"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Back to calendar
               </button>
 
-              <h2 className="text-2xl font-bold mb-6">Enter Your Details</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Enter Your Details
+              </h2>
 
-              {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+                  {error}
+                </div>
+              )}
 
-              <div className="space-y-4 max-w-xl">
+              <form onSubmit={handleSubmit} className="space-y-4 max-w-xl">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">
+                    <label className="block text-sm font-medium mb-1 text-gray-900">
                       First Name *
                     </label>
                     <input
@@ -408,11 +483,13 @@ const MeetingPage = () => {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      placeholder="Enter your first name"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">
+                    <label className="block text-sm font-medium mb-1 text-gray-900">
                       Last Name *
                     </label>
                     <input
@@ -420,13 +497,15 @@ const MeetingPage = () => {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      placeholder="Enter your last name"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-sm font-medium mb-1 text-gray-900">
                     Email *
                   </label>
                   <input
@@ -434,12 +513,14 @@ const MeetingPage = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    placeholder="Enter your email address"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-sm font-medium mb-1 text-gray-900">
                     Phone Number
                   </label>
                   <input
@@ -447,12 +528,13 @@ const MeetingPage = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    placeholder="Enter your phone number (optional)"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-sm font-medium mb-1 text-gray-900">
                     Additional Information
                   </label>
                   <textarea
@@ -460,20 +542,19 @@ const MeetingPage = () => {
                     value={formData.additionalInfo}
                     onChange={handleInputChange}
                     rows="4"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     placeholder="Please share anything that will help prepare for our meeting."
                   />
                 </div>
 
                 <button
-                  type="button"
-                  onClick={handleSubmit}
+                  type="submit"
                   disabled={loading}
                   className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {loading ? "Scheduling..." : "Schedule Event"}
                 </button>
-              </div>
+              </form>
             </div>
           )}
         </div>
