@@ -25,7 +25,7 @@ export function TestimonialSection() {
   const [ref, inView] = useInView({ threshold: 0.3 });
 
   return (
-    <section className="py-16 px-4 border-2">
+    <section className="py-16 px-4">
       <div className="w-full lg:w-11/12 mx-auto">
         {/* Header */}
         <motion.div
