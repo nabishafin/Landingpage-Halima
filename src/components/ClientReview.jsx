@@ -82,7 +82,7 @@ export default function ClientTestimonialsSection() {
 
   const handleReviewClick = () => {
     window.open(
-      "https://g.page/r/YOUR_GOOGLE_PLACE_ID/review",
+      "https://www.google.com/maps/place/Initiatives+Foundation/@23.7591129,90.4191301,17z/data=!4m8!3m7!1s0x3755b879d7395555:0x56dbea2972e3c44a!8m2!3d23.759108!4d90.421705!9m1!1b1!16s%2Fg%2F11qb4j4mmd?entry=ttu&g_ep=EgoyMDI1MTAwNC4wIKXMDSoASAFQAw%3D%3D",
       "_blank",
       "noopener,noreferrer"
     );
