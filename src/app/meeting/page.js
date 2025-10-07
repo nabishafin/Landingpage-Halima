@@ -27,9 +27,7 @@ const MeetingPage = () => {
     additionalInfo: "",
   });
 
-  const [timezoneInfo, setTimezoneInfo] = useState({
-    name: "",
-  });
+  const [timezoneInfo, setTimezoneInfo] = useState({ name: "" });
 
   const timezones = [
     { label: "Europe/London", value: "Europe/London" },
@@ -79,29 +77,23 @@ const MeetingPage = () => {
         isCurrentMonth: false,
       });
     }
-
     for (let i = 1; i <= daysInMonth; i++) {
       days.push({ day: i, isCurrentMonth: true });
     }
-
     return days;
   };
 
-  const formatMonth = (date) => {
-    return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
-  };
+  const formatMonth = (date) =>
+    date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
-  const handlePrevMonth = () => {
+  const handlePrevMonth = () =>
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() - 1)
     );
-  };
-
-  const handleNextMonth = () => {
+  const handleNextMonth = () =>
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() + 1)
     );
-  };
 
   const handleDateSelect = (day) => {
     if (day.isCurrentMonth) {
@@ -121,9 +113,8 @@ const MeetingPage = () => {
     setShowForm(true);
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -135,7 +126,6 @@ const MeetingPage = () => {
       );
       return;
     }
-
     if (!timezoneInfo.name) {
       setError("Please select a timezone.");
       return;
@@ -158,9 +148,7 @@ const MeetingPage = () => {
           additionalInfo: formData.additionalInfo,
         }),
       });
-
       const result = await response.json();
-
       if (result.success) {
         setSuccess(true);
         setFormData({
@@ -173,8 +161,7 @@ const MeetingPage = () => {
       } else {
         setError("Failed to schedule meeting. Please try again.");
       }
-    } catch (error) {
-      console.error("Error:", error);
+    } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -190,9 +177,7 @@ const MeetingPage = () => {
     });
   };
 
-  const handleBackToWebsite = () => {
-    router.push("/");
-  };
+  const handleBackToWebsite = () => router.push("/");
 
   if (success) {
     return (
@@ -228,7 +213,7 @@ const MeetingPage = () => {
                 setSelectedTime(null);
                 setShowForm(false);
               }}
-              className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-semibold transition-colors"
+              className="w-full bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900 font-semibold transition-colors"
             >
               Schedule Another Meeting
             </button>
@@ -236,8 +221,7 @@ const MeetingPage = () => {
               onClick={handleBackToWebsite}
               className="w-full flex items-center justify-center gap-2 text-gray-600 px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-50 font-semibold transition-colors"
             >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Website
+              <ArrowLeft className="w-4 h-4" /> Back to Website
             </button>
           </div>
         </div>
@@ -249,84 +233,72 @@ const MeetingPage = () => {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-lg max-w-6xl w-full flex flex-col lg:flex-row">
         {/* Left Sidebar */}
-        <div className="lg:w-80 p-8 border-r border-gray-200">
-          <div className="flex items-center gap-3 mb-6">
+        <div className="lg:w-96 p-10 border-r border-gray-300">
+          <div className="flex items-center gap-4 mb-8">
             <button
               onClick={handleBackToWebsite}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+              className="flex items-center gap-3 text-gray-700 hover:text-gray-900 transition-colors text-lg font-semibold"
             >
-              <ArrowLeft className="w-4 h-4" />
-              <span className="text-sm font-medium">Back to Website</span>
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Website</span>
             </button>
           </div>
-
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-              <Calendar className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Feedbird</p>
-              <h1 className="text-xl font-bold text-gray-900">
-                Feedbird Intro
-              </h1>
+          <div className="flex items-center gap-6 mb-8">
+            <div className="flex gap-3 items-center justify-center text-3xl font-extrabold">
+              <div className="border-4 px-4 py-2 rounded-lg border-gray-800 text-xl">
+                Re:
+              </div>
+              <div className="uppercase tracking-wider text-2xl">
+                Initiative
+              </div>
             </div>
           </div>
-
-          <div className="flex items-center gap-2 text-gray-600 mb-4">
-            <Clock className="w-5 h-5" />
+          <div className="flex items-center gap-3 text-gray-700 mb-6 text-lg">
+            <Clock className="w-6 h-6" />
             <span>20 min</span>
           </div>
-
-          <p className="text-sm text-gray-700 mb-6">
+          <p className="text-base text-gray-800 mb-8">
             Book a{" "}
-            <span className="font-semibold">free 20-min Google Meet call</span>{" "}
+            <span className="font-semibold text-lg">
+              free 20-min Google Meet call
+            </span>{" "}
             to learn more about Feedbird and get any of your questions answered.
           </p>
-
           {selectedDate && (
-            <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-600 rounded">
-              <p className="text-xs text-gray-600 mb-1">Selected Date</p>
-              <p className="font-semibold text-blue-900">
+            <div className="mb-8 p-6 bg-gray-100 border-l-4 border-gray-700 rounded-lg">
+              <p className="text-sm text-gray-700 mb-2">Selected Date</p>
+              <p className="font-bold text-gray-900 text-lg">
                 {formatSelectedDate()}
               </p>
               {selectedTime && (
                 <>
-                  <p className="text-xs text-gray-600 mt-2 mb-1">
+                  <p className="text-sm text-gray-700 mt-3 mb-1">
                     Selected Time
                   </p>
-                  <p className="font-semibold text-blue-900">{selectedTime}</p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="font-bold text-gray-900 text-lg">
+                    {selectedTime}
+                  </p>
+                  <p className="text-sm text-gray-500 mt-1">
                     {timezoneInfo.name}
                   </p>
                 </>
               )}
             </div>
           )}
-
-          <div className="mb-8">
-            <p className="font-semibold text-sm mb-2 text-gray-900">
+          <div className="mb-10">
+            <p className="font-bold text-lg mb-3 text-gray-900">
               Relevant links
             </p>
-            <ul className="text-sm text-blue-600 space-y-1">
-              <li className="hover:text-blue-800 cursor-pointer">
+            <ul className="text-base text-gray-700 space-y-2">
+              <li className="hover:text-gray-900 cursor-pointer">
                 ⭐ Client Reviews
               </li>
-              <li className="hover:text-blue-800 cursor-pointer">
+              <li className="hover:text-gray-900 cursor-pointer">
                 📊 Pricing & Plans
               </li>
-              <li className="hover:text-blue-800 cursor-pointer">
+              <li className="hover:text-gray-900 cursor-pointer">
                 📸 Examples of our work
               </li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="font-semibold text-sm mb-2 text-gray-900">
-              Not a good fit for:
-            </p>
-            <ul className="text-sm text-red-600 space-y-1">
-              <li>❌ Coaches & Consultants</li>
-              <li>❌ Personal Brands</li>
             </ul>
           </div>
         </div>
@@ -358,7 +330,6 @@ const MeetingPage = () => {
                       <ChevronRight className="w-5 h-5 text-gray-600" />
                     </button>
                   </div>
-
                   <div className="grid grid-cols-7 gap-1 mb-2">
                     {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(
                       (day) => (
@@ -371,7 +342,6 @@ const MeetingPage = () => {
                       )
                     )}
                   </div>
-
                   <div className="grid grid-cols-7 gap-1">
                     {getDaysInMonth(currentDate).map((day, idx) => (
                       <button
@@ -387,7 +357,7 @@ const MeetingPage = () => {
                           ${
                             selectedDate?.getDate() === day.day &&
                             day.isCurrentMonth
-                              ? "bg-blue-600 text-white hover:bg-blue-700"
+                              ? "bg-gray-800 text-white"
                               : ""
                           }
                         `}
@@ -396,8 +366,7 @@ const MeetingPage = () => {
                       </button>
                     ))}
                   </div>
-
-                  {/* Timezone Dropdown */}
+                  {/* Timezone */}
                   <div className="mt-6">
                     <label className="text-sm font-semibold mb-2 text-gray-900 block">
                       Select Timezone
@@ -407,7 +376,7 @@ const MeetingPage = () => {
                       onChange={(e) =>
                         setTimezoneInfo({ name: e.target.value })
                       }
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     >
                       <option value="">Select a timezone</option>
                       {timezones.map((tz) => (
@@ -434,8 +403,8 @@ const MeetingPage = () => {
                             className={`w-full text-left px-4 py-3 border rounded-lg font-medium transition-colors
                               ${
                                 selectedTime === time
-                                  ? "bg-blue-600 text-white border-blue-600"
-                                  : "border-blue-600 text-blue-600 hover:bg-blue-50"
+                                  ? "bg-gray-800 text-white border-gray-800"
+                                  : "border-gray-400 text-gray-800 hover:bg-gray-100"
                               }
                             `}
                           >
@@ -456,22 +425,18 @@ const MeetingPage = () => {
             <div>
               <button
                 onClick={() => setShowForm(false)}
-                className="flex items-center gap-2 text-blue-600 mb-6 hover:underline transition-colors"
+                className="flex items-center gap-2 text-gray-800 mb-6 hover:underline transition-colors"
               >
-                <ChevronLeft className="w-4 h-4" />
-                Back to calendar
+                <ChevronLeft className="w-4 h-4" /> Back to calendar
               </button>
-
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Enter Your Details
               </h2>
-
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
                   {error}
                 </div>
               )}
-
               <form onSubmit={handleSubmit} className="space-y-4 max-w-xl">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -484,7 +449,7 @@ const MeetingPage = () => {
                       value={formData.firstName}
                       onChange={handleInputChange}
                       required
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                       placeholder="Enter your first name"
                     />
                   </div>
@@ -498,12 +463,11 @@ const MeetingPage = () => {
                       value={formData.lastName}
                       onChange={handleInputChange}
                       required
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                       placeholder="Enter your last name"
                     />
                   </div>
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium mb-1 text-gray-900">
                     Email *
@@ -514,11 +478,10 @@ const MeetingPage = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     placeholder="Enter your email address"
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium mb-1 text-gray-900">
                     Phone Number
@@ -528,11 +491,10 @@ const MeetingPage = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     placeholder="Enter your phone number (optional)"
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium mb-1 text-gray-900">
                     Additional Information
@@ -542,15 +504,14 @@ const MeetingPage = () => {
                     value={formData.additionalInfo}
                     onChange={handleInputChange}
                     rows="4"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     placeholder="Please share anything that will help prepare for our meeting."
                   />
                 </div>
-
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="w-full bg-gray-800 text-white py-3 rounded-lg hover:bg-gray-900 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {loading ? "Scheduling..." : "Schedule Event"}
                 </button>
