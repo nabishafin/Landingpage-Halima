@@ -26,7 +26,7 @@ const Navbar = () => {
     { to: "you", label: "You" },
     { to: "clients", label: "Clients" },
     { to: "us", label: "Us" },
-    { to: "pricing", label: "Pricing" },
+    { to: "contact", label: "Contact" },
   ];
 
   return (

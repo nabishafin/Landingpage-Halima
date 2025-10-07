@@ -37,13 +37,13 @@ export default function Home() {
       {/* <section>
         review section
       </section> */}
-      <section>
+      <section id="us">
         <TeamSection />
       </section>
       <section>
         <FaqSection />
       </section>
-      <section >
+      <section id="contact">
         <ContactSection />
       </section>
       <section >
