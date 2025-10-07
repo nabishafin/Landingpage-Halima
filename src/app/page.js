@@ -7,6 +7,9 @@ import { StepsSection } from "@/components/StepsSection";
 import { CompanyLogos } from "@/components/CompanyLogos";
 import { HowWeWorkSection } from "@/components/HowWeWorkSection";
 import { TestimonialSection } from "@/components/TestimonialSection";
+import { TeamSection } from "@/components/TeamSection";
+import { FaqSection } from "@/components/FaqSection";
+import ContactForm, { ContactSection } from "@/components/ContactSection";
 
 export default function Home() {
   useLenis();
@@ -31,11 +34,19 @@ export default function Home() {
       <section>
         <HowWeWorkSection />
       </section>
-      <section id="about">
-        <AboutSection />
+      {/* <section>
+        review section
+      </section> */}
+      <section>
+        <TeamSection />
       </section>
-      <section id="services">
-        <ServicesSection />
+      <section>
+        <FaqSection />
+      </section>
+      <section >
+        <ContactSection />
+      </section>
+      <section >
       </section>
     </main>
   );

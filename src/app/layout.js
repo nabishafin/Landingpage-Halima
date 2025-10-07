@@ -1,7 +1,5 @@
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ConnectButton from "@/components/ConnectButton";
+import ClientWrapper from "@/components/ClientWrapper";
 
 export const metadata = {
   title: "My Landing Page",
@@ -10,12 +8,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className="bg-white text-gray-900">
-        <Navbar />
-        {children}
-        <Footer />
-        <ConnectButton />
+    <html lang="en" suppressHydrationWarning>
+      <body className="bg-white text-gray-900" suppressHydrationWarning>
+        <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
   );

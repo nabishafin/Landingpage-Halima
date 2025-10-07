@@ -1,13 +1,38 @@
-export default function Footer() {
+export function Footer() {
   return (
-    <footer
-      id="footer"
-      data-scroll-section
-      className="h-[40vh] flex flex-col justify-center items-center bg-green-700 text-white mt-16"
-    >
-      <h2 className="text-2xl font-semibold mb-2">Get in Touch</h2>
-      <p className="text-gray-200">info@smoothsite.com</p>
-      <p className="mt-3 text-sm">© 2025 SmoothSite. All rights reserved.</p>
+    <footer className="bg-black text-white py-12 px-6 pb-32">
+      <div className="w-full md:w-10/12 mx-auto flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
+        {/* Left side content */}
+        <div className="flex-1 max-w-2xl">
+          <p className="text-sm text-gray-400 mb-4">
+            © 2025 Re: Initiative. All rights reserved.
+          </p>
+          <p className="text-gray-300 mb-4 leading-relaxed">
+            We streamline your content creation process, helping you batch
+            produce high-quality content efficiently. Preventing burnout, and
+            allowing you to maintain consistent output.
+          </p>
+          <p className="text-gray-300 font-medium">
+            Let your videos work for you so you don't have to.
+          </p>
+        </div>
+
+        {/* Right side links */}
+        <div className="flex flex-col sm:flex-row gap-6 lg:gap-8">
+          <a
+            href="#"
+            className="text-white hover:text-gray-300 transition-colors duration-200 font-medium"
+          >
+            Terms and conditions
+          </a>
+          <a
+            href="#"
+            className="text-white hover:text-gray-300 transition-colors duration-200 font-medium"
+          >
+            Follow us on Instagram
+          </a>
+        </div>
+      </div>
     </footer>
   );
 }
