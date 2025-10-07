@@ -1,18 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Link as ScrollLink } from "react-scroll";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    // Prevent default behavior for all links (optional - react-scroll handles this)
-    document.querySelectorAll("a").forEach((a) => {
-      a.addEventListener("click", (e) => e.preventDefault());
-    });
-  }, []);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
@@ -42,7 +35,7 @@ const Navbar = () => {
               </div>
             </Link>
 
-            {/* Desktop Navigation - Centered */}
+            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-12 lg:space-x-32 text-lg font-semibold">
               {navItems.map((item) => (
                 <ScrollLink
@@ -51,7 +44,7 @@ const Navbar = () => {
                   smooth={true}
                   duration={800}
                   offset={-100}
-                  className="hover:text-gray-300 transition-colors cursor-pointer"
+                  className="scroll-link hover:text-gray-300 transition-colors cursor-pointer"
                   activeClass="text-gray-300"
                   spy={true}
                 >
@@ -60,7 +53,7 @@ const Navbar = () => {
               ))}
             </div>
 
-            {/* Right side spacer for balance (desktop only) */}
+            {/* Right side spacer (desktop only) */}
             <div className="hidden md:block flex-shrink-0 w-[120px]"></div>
 
             {/* Mobile Menu Button */}
@@ -98,7 +91,7 @@ const Navbar = () => {
                 smooth={true}
                 duration={800}
                 offset={-100}
-                className="block text-sm font-medium hover:text-gray-300 transition-colors py-2 w-full text-left cursor-pointer"
+                className="scroll-link block text-sm font-medium hover:text-gray-300 transition-colors py-2 w-full text-left cursor-pointer"
                 onClick={closeMobileMenu}
                 activeClass="text-gray-300"
                 spy={true}

@@ -1,7 +1,7 @@
 export function Footer() {
   return (
     <footer className="bg-black text-white py-12 px-6 pb-32">
-      <div className="w-full md:w-10/12 mx-auto flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
+      <div className="w-full lg:w-11/12 mx-auto flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
         {/* Left side content */}
         <div className="flex-1 max-w-2xl">
           <p className="text-sm text-gray-400 mb-4">

@@ -55,7 +55,7 @@ export function FaqSection() {
 
     return (
         <section className="py-20 px-6">
-            <div className="w-full md:w-10/12 mx-auto">
+            <div className="w-full lg:w-11/12 mx-auto">
                 <div className="grid lg:grid-cols-2 gap-16 items-start">
                     {/* Left side - FAQ heading */}
                     <motion.div
