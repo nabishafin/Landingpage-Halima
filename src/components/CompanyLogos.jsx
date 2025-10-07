@@ -38,7 +38,7 @@ export function CompanyLogos() {
   ];
 
   return (
-    <section className="py-  mt-16">
+    <section className="px-4 mt-16">
       <div className="w-full lg:w-11/12 mx-auto text-center">
         <motion.h2
           className="text-4xl md:text-5xl font-bold mb-10 text-black"
