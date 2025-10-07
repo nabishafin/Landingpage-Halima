@@ -10,6 +10,7 @@ import { TestimonialSection } from "@/components/TestimonialSection";
 import { TeamSection } from "@/components/TeamSection";
 import { FaqSection } from "@/components/FaqSection";
 import ContactForm, { ContactSection } from "@/components/ContactSection";
+import ClientTestimonialsSection from "@/components/ClientReview";
 
 export default function Home() {
   useLenis();
@@ -34,9 +35,9 @@ export default function Home() {
       <section>
         <HowWeWorkSection />
       </section>
-      {/* <section>
-        review section
-      </section> */}
+      <section>
+        <ClientTestimonialsSection />
+      </section>
       <section id="us">
         <TeamSection />
       </section>
@@ -46,8 +47,7 @@ export default function Home() {
       <section id="contact">
         <ContactSection />
       </section>
-      <section >
-      </section>
+      <section></section>
     </main>
   );
 }
