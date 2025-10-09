@@ -6,34 +6,34 @@ import { motion } from "framer-motion";
 
 const faqData = [
   {
-    question: "What is Re: Initiative?",
+    question: "What types of brands do you work with?",
     answer:
-      "Re: Initiative is a strategy-first content creation agency built for busy entrepreneurs and modern brands who want high-quality video content without the hassle.",
+      "We specialise in fashion, beauty, and lifestyle brands — but we also partner with businesses in other industries where strategy, design, and storytelling are essential. This includes corporate clients who value brand clarity and creative direction to sharpen their presence.",
   },
   {
-    question: "What types of content do you produce?",
+    question: "How are your services structured?",
     answer:
-      "We specialize in creating various types of video content including vlogs, documentaries, TikTok shorts, promotional videos, brand stories, and social media content tailored to your specific needs and platform requirements.",
+      "Our work is built on five strategic pillars — Re:Define, Re:Design, Re:Present, Re:Scale, and Re:Structure. Depending on where your brand is, we guide you through three engagement levels: Foundation, Growth, or Structure.",
   },
   {
-    question: "How does your process work?",
+    question: "How is The Re:Initiative different from a traditional agency?",
     answer:
-      "Our process begins with a discovery call to understand your goals, followed by strategic planning, content creation, and post-production. We handle everything from concept development to final delivery, ensuring a seamless experience for our clients.",
+      "Unlike agencies that jump straight to execution, we begin with strategy. Every creative or marketing decision is rooted in brand positioning and long-term structure. This ensures you’re not just producing content but building lasting brand equity.",
   },
   {
-    question: "What makes Re: Initiative different?",
+    question: "Do you offer fixed packages or custom solutions?",
     answer:
-      "We take a strategy-first approach, focusing on understanding your business objectives before creating content. Our team combines creative expertise with business acumen to deliver content that not only looks great but drives real results for your brand.",
+      "We design bespoke solutions for each client, but our work is guided by structured bundles and frameworks. This balance gives you clarity on scope and investment while ensuring the solution is tailored to your needs.",
   },
   {
-    question: "Do you manage social media or just create content?",
+    question: "Where are you based, and do you work internationally?",
     answer:
-      "While our primary focus is on high-quality content creation, we also offer social media management services. We can help with content strategy, posting schedules, and community engagement to maximize the impact of your video content.",
+      "We’re founded in London, with collaborations that span Europe, North America, Africa, and beyond. Our network of strategists, designers, and creative partners allows us to deliver seamlessly across markets.",
   },
   {
-    question: "How is pricing structured?",
+    question: "What does the consultation involve?",
     answer:
-      "Our pricing is project-based and depends on the scope, complexity, and deliverables required. We offer transparent pricing with detailed proposals that outline all costs upfront. Contact us for a custom quote based on your specific needs.",
+      "Our consultations are short and focused. They give us a chance to hear about your brand, your goals, and where you are in your journey. It also allows you to learn more about us and how we work. It’s a first step to see if there’s alignment before moving forward.",
   },
 ];
 
@@ -64,7 +64,7 @@ export function FaqSection() {
             viewport={{ once: true, amount: 0.3 }}
             variants={fadeUp}
           >
-            <h2 className="text-5xl lg:text-8xl font-bold text-black mb-6">
+            <h2 className="text-4xl lg:text-6xl font-bold text-black mb-6">
               FAQ.
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed">

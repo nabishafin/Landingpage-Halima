@@ -41,14 +41,14 @@ export function HowWeWorkSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.3 }}
-          className="space-y-6"
+          className="space-y-4"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold leading-tight">
+          <h2 className="text-3xl lg:text-4xl font-bold leading-snug">
             How We Work <br />
-            <span className="text-white">with you</span>
+            <span className="text-[#686868]">with you</span>
           </h2>
 
-          <p className="text-white text-lg leading-relaxed">
+          <p className="text-white text-base leading-relaxed">
             Every brand has a different starting point. Some need clarity,
             others crave growth, and some are ready to scale with structure. At
             <span className="text-white font-semibold"> The Re:Initiative</span>
@@ -56,18 +56,18 @@ export function HowWeWorkSection() {
             framework.
           </p>
 
-          <p className="text-white text-lg leading-relaxed">
+          <p className="text-white text-base leading-relaxed">
             To simplify your journey, we’ve shaped three engagement levels, each
             powered by our five pillars:
           </p>
         </motion.div>
 
         {/* RIGHT CONTENT - CARDS */}
-        <div className="space-y-8">
+        <div className="space-y-6">
           {workSteps.map((step, index) => (
             <motion.div
               key={step.id}
-              className="bg-[#111] p-8 rounded-2xl relative overflow-hidden group border border-white/10 hover:border-white/20 transition-colors"
+              className="bg-[#111] p-6 rounded-2xl relative overflow-hidden group border border-white/10 hover:border-white/20 transition-colors"
               initial={{ opacity: 0, y: 60 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
@@ -77,11 +77,11 @@ export function HowWeWorkSection() {
               }}
               viewport={{ once: true, amount: 0.3 }}
             >
-              <h3 className="text-2xl font-semibold mb-4">{step.title}</h3>
-              <p className="text-white mb-3 leading-relaxed">
+              <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
+              <p className="text-white mb-2 text-sm leading-relaxed">
                 {step.description}
               </p>
-              <p className="text-gray-400 italic">{step.powered}</p>
+              <p className="text-gray-400 italic text-sm">{step.powered}</p>
             </motion.div>
           ))}
 
@@ -91,10 +91,11 @@ export function HowWeWorkSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: true, amount: 0.3 }}
+            className="flex justify-center mt-4"
           >
             <Button
               onClick={() => router.push("/meeting")}
-              className="mt-4 bg-white w-full md:w-80 text-black py-3 rounded-full font-semibold flex items-center gap-2 hover:bg-gray-200 transition"
+              className="bg-white w-40 text-black py-3 rounded-full font-semibold flex items-center gap-2 hover:bg-gray-200 transition"
             >
               Enquire <ArrowRight size={18} />
             </Button>

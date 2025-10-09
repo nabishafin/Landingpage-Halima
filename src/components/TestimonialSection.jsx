@@ -77,7 +77,7 @@ export function TestimonialSection() {
             viewport={{ once: true, amount: 0.3 }}
           >
             {/* Quote */}
-            <div className="text-lg text-[#686868] leading-relaxed font-bold">
+            <div className="text-lg text-[#686868] leading-relaxed font-semibold">
               <p>
                 <strong className="text-black">
                   An incredibly talented group.
@@ -103,7 +103,7 @@ export function TestimonialSection() {
                     <CountUp
                       start={0}
                       end={inView ? stat.number : 0}
-                      duration={3}
+                      duration={40}
                       separator=","
                       suffix={stat.suffix}
                     />
@@ -115,7 +115,7 @@ export function TestimonialSection() {
               {textStats.slice(0, 2).map((stat) => (
                 <div
                   key={stat.id}
-                  className="relative bg-white font-extrabold px-12 py-6 rounded-lg"
+                  className="relative bg-white font-semibold px-12 py-6 rounded-lg"
                 >
                   <div className="text-sm text-black leading-tight text-end">
                     <p>{stat.title}</p>
@@ -149,7 +149,7 @@ export function TestimonialSection() {
               {textStats.slice(2, 4).map((stat) => (
                 <div
                   key={stat.id}
-                  className="relative bg-white font-extrabold px-12 py-6 rounded-lg"
+                  className="relative bg-white font-semibold px-12 py-6 rounded-lg"
                 >
                   <div className="text-sm text-black leading-tight text-end">
                     <p>{stat.title}</p>

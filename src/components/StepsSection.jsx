@@ -41,18 +41,18 @@ export function StepsSection() {
   return (
     <section id="you" className="px-4 w-auto lg:w-11/12 mx-auto ">
       {/* Top Section */}
-      <section className="flex items-center justify-center mt-10">
+      <section className="flex items-center justify-center my-5 md:my-16">
         <div className="w-full  mx-auto text-center">
-          <div className="flex items-center justify-start gap-2 mb-4">
-            <CirclePlus className="w-6 h-6 text-[#686868] font-bold" />
-            <span className="text-lg md:text-2xl font-semibold text-[#686868]">
+          <div className="flex items-center justify-start gap-2 mb-16">
+            <CirclePlus className="w-6 h-6 text-black font-bold" />
+            <span className="text-md md:text-xl font-semibold text-black">
               What We Do
             </span>
           </div>
 
           {/* Main heading */}
           <motion.h1
-            className="text-3xl md:text-4xl lg:text-6xl font-[700] text-balance leading-tight"
+            className="text-2xl md:text-3xl lg:text-6xl font-[500] text-balance leading-tight"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -68,18 +68,8 @@ export function StepsSection() {
         </div>
       </section>
 
-      <div className="w-full md:max-w-2/12 my-10 mx-auto">
-        <EnquireButton />
-      </div>
       <section className="flex items-center justify-center mt-10">
-        <div className="w-full  mx-auto text-center">
-          <div className="flex items-center justify-start gap-2 mb-4">
-            <CirclePlus className="w-6 h-6 text-[#686868] font-bold" />
-            <span className="text-lg md:text-2xl font-semibold text-[#686868]">
-              Our Services
-            </span>
-          </div>
-
+        <div className="w-full  mx-auto text-center my-6">
           {/* Main heading */}
           <motion.h1
             className="text-xl mb-10 "
@@ -89,7 +79,7 @@ export function StepsSection() {
             viewport={{ once: true, amount: 0.3 }}
           >
             <span className="text-black">
-              Delivered through five strategic pillars. <br />
+              Our services are delivered through five strategic pillars. <br />
               These are the ways we partner with you to build, grow, and sustain
               your brand.
             </span>
@@ -97,12 +87,13 @@ export function StepsSection() {
         </div>
       </section>
       {/* Steps Grid */}
+
       <div className="">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
           {steps.map((step, index) => (
             <motion.div
               key={index}
-              className="bg-white p-3 sm:p-5 rounded-xl text-left hover:shadow-lg transition-shadow duration-300"
+              className="bg-white p-3 sm:p-4 rounded-xl text-left hover:shadow-lg transition-shadow duration-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
@@ -113,21 +104,17 @@ export function StepsSection() {
               viewport={{ once: true, amount: 0.3 }}
             >
               {/* Number and dots in a row */}
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center mb-3">
                 {/* Step number */}
-                <div className="text-lg sm:text-xl font-semibold text-[#686868]">
-                  {step.number}
-                </div>
+                <div className=" sm:text-sm  text-[#686868]">{step.number}</div>
 
                 {/* Dots indicator */}
-                <div className="flex gap-1 sm:gap-2">
+                <div className="flex gap-1 sm:gap-1.5">
                   {Array.from({ length: 5 }).map((_, dotIndex) => (
                     <div
                       key={dotIndex}
-                      className={`w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full ${
-                        dotIndex < step.activeDots
-                          ? "bg-[#686868]"
-                          : "bg-gray-300"
+                      className={`w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full ${
+                        dotIndex < step.activeDots ? "bg-black" : "bg-gray-300"
                       }`}
                     />
                   ))}
@@ -135,12 +122,12 @@ export function StepsSection() {
               </div>
 
               {/* Step title */}
-              <h3 className="text-base sm:text-lg md:text-xl font-bold text-[#686868] mb-2">
+              <h3 className="text-sm sm:text-base md:text-lg font-bold text-[#686868] mb-1">
                 {step.title}
               </h3>
 
               {/* Step text */}
-              <p className="text-sm sm:text-base md:text-base leading-relaxed font-medium text-[#686868]">
+              <p className="text-xs sm:text-sm md:text-sm leading-snug font-medium text-[#686868]">
                 {step.text}
               </p>
             </motion.div>

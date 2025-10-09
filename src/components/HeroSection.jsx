@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const HeroSection = React.memo(() => {
   return (
-    <section className="relative w-full py-28 md:py-80 overflow-hidden">
+    <section className="relative w-full py-72 md:py-80 overflow-hidden">
       {/* Background Video */}
       <video
         className="absolute top-0 left-0 w-full h-full object-cover"
@@ -25,7 +25,7 @@ const HeroSection = React.memo(() => {
         transition={{ duration: 1, ease: "easeOut" }}
       >
         <motion.h1
-          className="text-white text-3xl  sm:text-4xl md:text-4xl font-bold mb-6 drop-shadow-lg leading-snug max-w-full px-2"
+          className="text-white text-3xl sm:text-4xl md:text-4xl font-bold mb-6 drop-shadow-lg leading-snug max-w-full px-2"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
@@ -43,8 +43,6 @@ const HeroSection = React.memo(() => {
           strategy, design, and creative direction, with every solution
           meticulously tailored.
         </motion.h2>
-
-        {/* "Here’s how:" aligned left with same width/padding as list */}
 
         {/* Solutions List */}
         <motion.ul

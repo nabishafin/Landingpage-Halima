@@ -23,25 +23,21 @@ export function CompanyLogos() {
       { name: "TESCO", src: img2, alt: "TESCO" },
       { name: "Virgin Atlantic", src: img3, alt: "Virgin Atlantic" },
       { name: "BBC", src: img4, alt: "BBC" },
-      { name: "L'ORÉAL PARIS", src: img5, alt: "L'ORÉAL PARIS" },
-      { name: "Sony Music", src: img6, alt: "Sony Music" },
     ],
     // Bottom row
     [
+      { name: "L'ORÉAL PARIS", src: img5, alt: "L'ORÉAL PARIS" },
       { name: "WPP", src: img7, alt: "WPP" },
       { name: "Ogilvy", src: img8, alt: "Ogilvy" },
       { name: "TEDx", src: img9, alt: "TEDx" },
-      { name: "Sta Studios", src: img10, alt: "Sta Studios" },
-      { name: "Ruka", src: img6, alt: "Ruka" },
-      { name: "World Economic Forum", src: img8, alt: "World Economic Forum" },
     ],
   ];
 
   return (
-    <section className="px-4 mt-16">
-      <div className="w-full lg:w-11/12 mx-auto text-center">
+    <section className="px-4 my-16">
+      <div className="w-full lg:w-8/12 mx-auto text-center">
         <motion.h2
-          className="text-4xl md:text-5xl font-bold mb-10 text-black"
+          className="text-4xl md:text-5xl font-bold mt-20 mb-10 text-black"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -50,11 +46,11 @@ export function CompanyLogos() {
           The company <span className="">we keep</span>
         </motion.h2>
 
-        <div className="space-y-2">
+        <div className="space-y-1">
           {companies.map((row, rowIndex) => (
             <motion.div
               key={rowIndex}
-              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 items-center justify-items-center"
+              className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-1 justify-items-center mx-auto"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
@@ -67,7 +63,7 @@ export function CompanyLogos() {
               {row.map((company, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-center h-40 w-full bg-white rounded-lg p-4 hover:shadow-lg transition-shadow duration-300"
+                  className="flex items-center justify-center h-35 w-full bg-white rounded-lg p-4 hover:shadow-lg transition-shadow duration-300"
                 >
                   <Image
                     src={company.src}

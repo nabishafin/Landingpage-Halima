@@ -15,7 +15,7 @@ const ClientReview = ({ name, role, image, rating, testimonial, isCenter }) => {
         isCenter ? "transform scale-105 z-10" : ""
       }`}
     >
-      <p className="text-gray-900 leading-relaxed text-2xl mb-8">
+      <p className="text-gray-900 leading-relaxed text-md  mb-26">
         {testimonial}
       </p>
 
@@ -89,9 +89,9 @@ export default function ClientTestimonialsSection() {
   };
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
+    <section className="pt-10 pb-8 px-4 bg-gradient-to-b from-gray-50 to-white">
       <div className="w-full lg:w-11/12 mx-auto">
-        <h2 className="text-4xl font-bold text-gray-900 text-center mb-12">
+        <h2 className="text-4xl font-bold text-gray-900 text-center mb-12 mt-10">
           What Our Clients Say
         </h2>
 
@@ -101,12 +101,18 @@ export default function ClientTestimonialsSection() {
           ))}
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex justify-center flex-col">
           <button
             onClick={handleReviewClick}
             className="w-full bg-gray-900 hover:bg-gray-800 text-white py-2 px-8 rounded-full text-lg font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
           >
             Leave us a review
+          </button>
+          <button
+            onClick={handleReviewClick}
+            className="w-full bg-gray-900 hover:bg-gray-800 mt-1 text-white py-2 px-8 rounded-full text-lg font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+          >
+            Google Reviews
           </button>
         </div>
 
