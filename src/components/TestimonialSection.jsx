@@ -29,7 +29,7 @@ export function TestimonialSection() {
       <div className="w-full lg:w-11/12 mx-auto">
         {/* Header */}
         <motion.div
-          className="mb-12"
+          className="mb-0  md:mb-12"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
