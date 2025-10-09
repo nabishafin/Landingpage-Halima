@@ -25,11 +25,11 @@ export function TestimonialSection() {
   const [ref, inView] = useInView({ threshold: 0.3 });
 
   return (
-    <section className="py-16 px-4">
+    <section className="py-2 md:py-16 px-4">
       <div className="w-full lg:w-11/12 mx-auto">
         {/* Header */}
         <motion.div
-          className="mb-0  md:mb-12"
+          className="mb-0 md:mb-12"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
@@ -43,9 +43,59 @@ export function TestimonialSection() {
 
         {/* Content */}
         <div className="flex flex-col lg:flex-row gap-12 items-stretch justify-between">
-          {/* Left - Image */}
+          {/* For mobile: Quote comes first, then image */}
+          <div className="lg:hidden flex flex-col gap-8">
+            {/* Quote - Mobile */}
+            <motion.div
+              className="w-full space-y-8"
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <div className="text-lg text-[#686868] leading-relaxed font-semibold mt-2 md:mt-0">
+                <p>
+                  <strong className="text-black">
+                    An incredibly talented group.
+                  </strong>{" "}
+                  Who perform at high standards. I was impressed with the
+                  thoroughness of their work, the creativity in their vision and
+                  sound storytelling. I'd highly recommend.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Image - Mobile */}
+            <motion.div
+              className="w-full relative group"
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <div className="relative overflow-hidden rounded-3xl h-96 md:h-80">
+                <Image
+                  src={pic}
+                  alt="Bozoma St John"
+                  fill
+                  className="object-cover object-[center_top] transition-transform duration-500 ease-out group-hover:scale-110 group-hover:blur-sm"
+                />
+                {/* Overlay text */}
+                <div className="absolute bottom-0 left-0 w-full p-4 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <p className="text-white text-sm md:text-sm font-semibold text-center">
+                    Meet Bozoma St John – A Hall of Fame marketer with global
+                    impact.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* For desktop: Original layout */}
+
+          {/* Left - Image - Desktop */}
           <motion.div
-            className="w-full lg:w-1/4 relative group"
+            className="hidden lg:block w-full lg:w-1/4 relative group"
             initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
@@ -68,7 +118,7 @@ export function TestimonialSection() {
             </div>
           </motion.div>
 
-          {/* Right - Text + Stats */}
+          {/* Right - Text + Stats - Desktop */}
           <motion.div
             className="w-full lg:w-2/5 space-y-8"
             initial={{ opacity: 0, y: 60 }}
@@ -76,8 +126,8 @@ export function TestimonialSection() {
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            {/* Quote */}
-            <div className="text-lg text-[#686868] leading-relaxed font-semibold">
+            {/* Quote - Desktop */}
+            <div className="hidden lg:block text-lg text-[#686868] leading-relaxed font-semibold">
               <p>
                 <strong className="text-black">
                   An incredibly talented group.
@@ -88,18 +138,18 @@ export function TestimonialSection() {
               </p>
             </div>
 
-            {/* Stats Grid */}
+            {/* Stats Grid - Both mobile and desktop */}
             <div ref={ref} className="grid grid-cols-2 gap-1 pt-4">
               {/* Row 1: Number cards */}
               {numberStats.slice(0, 2).map((stat) => (
                 <div
                   key={stat.id}
-                  className="relative bg-white px-12 py-6 rounded-lg"
+                  className="relative bg-white px-6 lg:px-12 py-6 rounded-lg"
                 >
                   <div className="absolute top-3 right-3 text-xs text-gray-400 font-bold">
                     {stat.cardNumber}
                   </div>
-                  <div className="text-4xl md:text-5xl font-bold text-black mb-2">
+                  <div className="text-3xl lg:text-4xl md:text-5xl font-bold text-black mb-2">
                     <CountUp
                       start={0}
                       end={inView ? stat.number : 0}
@@ -115,7 +165,7 @@ export function TestimonialSection() {
               {textStats.slice(0, 2).map((stat) => (
                 <div
                   key={stat.id}
-                  className="relative bg-white font-semibold px-12 py-6 rounded-lg"
+                  className="relative bg-white font-semibold px-6 lg:px-12 py-6 rounded-lg"
                 >
                   <div className="text-sm text-black leading-tight text-end">
                     <p>{stat.title}</p>
@@ -128,12 +178,12 @@ export function TestimonialSection() {
               {numberStats.slice(2, 4).map((stat) => (
                 <div
                   key={stat.id}
-                  className="relative bg-white px-12 py-6 rounded-lg"
+                  className="relative bg-white px-6 lg:px-12 py-6 rounded-lg"
                 >
                   <div className="absolute top-3 right-3 text-xs text-gray-400 font-bold">
                     {stat.cardNumber}
                   </div>
-                  <div className="text-4xl md:text-5xl font-bold text-black mb-2">
+                  <div className="text-3xl lg:text-4xl md:text-5xl font-bold text-black mb-2">
                     <CountUp
                       start={0}
                       end={inView ? stat.number : 0}
@@ -149,7 +199,7 @@ export function TestimonialSection() {
               {textStats.slice(2, 4).map((stat) => (
                 <div
                   key={stat.id}
-                  className="relative bg-white font-semibold px-12 py-6 rounded-lg"
+                  className="relative bg-white font-semibold px-6 lg:px-12 py-6 rounded-lg"
                 >
                   <div className="text-sm text-black leading-tight text-end">
                     <p>{stat.title}</p>
