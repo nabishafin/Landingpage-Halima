@@ -53,7 +53,7 @@ export function TestimonialSection() {
               transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
               viewport={{ once: true, amount: 0.3 }}
             >
-              <div className="text-lg text-[#686868] leading-relaxed font-semibold mt-2 md:mt-0">
+              <div className="text-[15px] text-[#686868] leading-relaxed  mt-6 md:mt-0">
                 <p>
                   <strong className="text-black">
                     An incredibly talented group.
@@ -73,7 +73,7 @@ export function TestimonialSection() {
               transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
               viewport={{ once: true, amount: 0.3 }}
             >
-              <div className="relative overflow-hidden rounded-3xl h-96 md:h-80">
+              <div className="relative overflow-hidden rounded-3xl h-[520px] md:h-80">
                 <Image
                   src={pic}
                   alt="Bozoma St John"
@@ -120,14 +120,14 @@ export function TestimonialSection() {
 
           {/* Right - Text + Stats - Desktop */}
           <motion.div
-            className="w-full lg:w-2/5 space-y-8"
+            className="w-full lg:w-2/5 space-y-3"
             initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             viewport={{ once: true, amount: 0.3 }}
           >
             {/* Quote - Desktop */}
-            <div className="hidden lg:block text-lg text-[#686868] leading-relaxed font-semibold">
+            <div className="hidden lg:block text-[16px] text-[#686868] leading-relaxed  ">
               <p>
                 <strong className="text-black">
                   An incredibly talented group.

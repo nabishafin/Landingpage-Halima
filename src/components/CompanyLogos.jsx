@@ -37,7 +37,7 @@ export function CompanyLogos() {
     <section className="px-4 my-16">
       <div className="w-full lg:w-8/12 mx-auto text-center">
         <motion.h2
-          className="text-3xl md:text-5xl font-bold mt-20 mb-10 text-black text-left md:text-center sm:text-xl"
+          className="text-3xl md:text-5xl font-bold mt-20 mb-5 md:mb-10 text-black text-left md:text-center sm:text-xl"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
