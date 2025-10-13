@@ -52,7 +52,7 @@ export function StepsSection() {
 
           {/* Main heading */}
           <motion.h1
-            className="text-3xl sm:text-4xl md:text-3xl lg:text-6xl font-[500] text-balance leading-tight"
+            className="text-3xl sm:text-4xl md:text-3xl lg:text-6xl font-[500] text-balance leading-tight mt-8 md:mt-0"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
