@@ -23,14 +23,14 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="fixed top-0 w-full z-[9999] bg-black/80 backdrop-blur-sm">
-      <nav className="text-white">
+    <header className="fixed top-0 w-full z-[9999] bg-white ">
+      <nav className="text-black">
         <div className="mx-auto w-full md:w-11/12 px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="text-3xl font-bold flex-shrink-0">
               <div className="flex gap-1 items-center justify-center">
-                <div className="border-2 px-1">Re:</div>
+                <div className="border-2 border-black px-1">Re:</div>
                 <div>Initiative</div>
               </div>
             </Link>
@@ -44,8 +44,8 @@ const Navbar = () => {
                   smooth={true}
                   duration={800}
                   offset={-100}
-                  className="scroll-link hover:text-gray-300 transition-colors cursor-pointer"
-                  activeClass="text-gray-300"
+                  className="scroll-link hover:text-gray-600 transition-colors cursor-pointer"
+                  activeClass="text-gray-600"
                   spy={true}
                 >
                   {item.label}
@@ -63,17 +63,17 @@ const Navbar = () => {
               aria-label="Toggle mobile menu"
             >
               <span
-                className={`block w-6 h-0.5 bg-white transition-transform duration-300 ${
+                className={`block w-6 h-0.5 bg-black transition-transform duration-300 ${
                   isMobileMenuOpen ? "rotate-45 translate-y-2" : ""
                 }`}
               />
               <span
-                className={`block w-6 h-0.5 bg-white transition-opacity duration-300 ${
+                className={`block w-6 h-0.5 bg-black transition-opacity duration-300 ${
                   isMobileMenuOpen ? "opacity-0" : ""
                 }`}
               />
               <span
-                className={`block w-6 h-0.5 bg-white transition-transform duration-300 ${
+                className={`block w-6 h-0.5 bg-black transition-transform duration-300 ${
                   isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
                 }`}
               />
@@ -83,7 +83,7 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         <div
-          className={`md:hidden bg-black/90 backdrop-blur-sm transition-all duration-300 overflow-hidden ${
+          className={`md:hidden bg-white/90 backdrop-blur-sm transition-all duration-300 overflow-hidden ${
             isMobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
@@ -95,9 +95,9 @@ const Navbar = () => {
                 smooth={true}
                 duration={800}
                 offset={-100}
-                className="scroll-link block text-sm font-medium hover:text-gray-300 transition-colors py-2 w-full text-left cursor-pointer"
+                className="scroll-link block text-sm font-medium hover:text-gray-600 transition-colors py-2 w-full text-left cursor-pointer"
                 onClick={closeMobileMenu}
-                activeClass="text-gray-300"
+                activeClass="text-gray-600"
                 spy={true}
               >
                 {item.label}

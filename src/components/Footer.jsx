@@ -51,8 +51,14 @@ export function Footer() {
 
             <h2 className="text-3xl font-bold mb-4">Terms and Conditions</h2>
 
-            {/* Scrollable content with fixed height */}
-            <div className="overflow-y-auto h-96 pr-2 text-gray-700">
+            {/* Scrollable content */}
+            <div
+              className="overflow-y-auto h-96 pr-2 text-gray-700"
+              style={{
+                scrollbarWidth: "thin",
+                scrollbarColor: "#a0aec0 #f0f0f0",
+              }}
+            >
               <p className="mb-4">
                 Welcome to Re: Initiative. By accessing our website, you agree
                 to the following terms and conditions:
