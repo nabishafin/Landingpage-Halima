@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const HeroSection = React.memo(() => {
   return (
-    <section className="relative w-full py-72 md:py-80 overflow-hidden">
+    <section className="relative py-52 md:py-80 overflow-hidden w-[98%] md:w-[99%] mx-auto rounded-2xl mt-18">
       {/* Background Video */}
       <video
         className="absolute top-0 left-0 w-full h-full object-cover"
@@ -34,7 +34,7 @@ const HeroSection = React.memo(() => {
         </motion.h1>
 
         <motion.h2
-          className="text-[#9c9c9c] text-sm sm:text-base md:text-2xl font-semibold mb-2 max-w-full sm:max-w-2xl md:max-w-6xl mx-auto leading-relaxed px-2"
+          className="text-[#9c9c9c] text-[12px] sm:text-base md:text-2xl font-semibold mb-2 max-w-full sm:max-w-2xl md:max-w-6xl mx-auto leading-relaxed px-2"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}

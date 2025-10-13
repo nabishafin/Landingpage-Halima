@@ -23,14 +23,16 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="fixed top-0 w-full z-[9999] bg-white ">
+    <header className="fixed top-0 w-full z-[9999] bg-[#F5F5F5] backdrop-blur-sm">
       <nav className="text-black">
         <div className="mx-auto w-full md:w-11/12 px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="text-3xl font-bold flex-shrink-0">
               <div className="flex gap-1 items-center justify-center">
-                <div className="border-2 border-black px-1">Re:</div>
+                <div className="border-2 border-black rounded-[1px] px-1">
+                  Re:
+                </div>
                 <div>Initiative</div>
               </div>
             </Link>
@@ -44,8 +46,8 @@ const Navbar = () => {
                   smooth={true}
                   duration={800}
                   offset={-100}
-                  className="scroll-link hover:text-gray-600 transition-colors cursor-pointer"
-                  activeClass="text-gray-600"
+                  className="scroll-link hover:text-gray-700 transition-colors cursor-pointer"
+                  activeClass="text-gray-700"
                   spy={true}
                 >
                   {item.label}
@@ -83,7 +85,7 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         <div
-          className={`md:hidden bg-white/90 backdrop-blur-sm transition-all duration-300 overflow-hidden ${
+          className={`md:hidden bg-[#F5F5F5] backdrop-blur-sm transition-all duration-300 overflow-hidden ${
             isMobileMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
@@ -95,9 +97,9 @@ const Navbar = () => {
                 smooth={true}
                 duration={800}
                 offset={-100}
-                className="scroll-link block text-sm font-medium hover:text-gray-600 transition-colors py-2 w-full text-left cursor-pointer"
+                className="scroll-link block text-sm font-medium hover:text-gray-700 transition-colors py-2 w-full text-left cursor-pointer"
                 onClick={closeMobileMenu}
-                activeClass="text-gray-600"
+                activeClass="text-gray-700"
                 spy={true}
               >
                 {item.label}
