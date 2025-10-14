@@ -140,8 +140,7 @@ export function TeamSection() {
               {teamMembers.map((member, index) => (
                 <motion.div
                   key={member.id}
-                  className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40"
-                  style={{ height: "350px" }}
+                  className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40 h-[550px] sm:h-[400px]"
                   onMouseEnter={() => setHoveredMember(member.id)}
                   onMouseLeave={() => setHoveredMember(null)}
                   onTouchStart={() => setHoveredMember(member.id)}
@@ -162,15 +161,6 @@ export function TeamSection() {
                     priority={index < 2}
                   />
 
-                  {/* Overlay */}
-                  <div
-                    className={`absolute inset-0 bg-black/20 transition-colors duration-300 ${
-                      hoveredMember === member.id
-                        ? "bg-black/40"
-                        : "group-hover:bg-black/40"
-                    }`}
-                  />
-
                   {/* Role (top left) */}
                   <div className="absolute top-4 left-4 right-4">
                     <div className="flex items-center gap-2">
@@ -188,7 +178,7 @@ export function TeamSection() {
                     </h3>
                   </div>
 
-                  {/* Description */}
+                  {/* Description (hover reveal) */}
                   <div
                     className={`absolute inset-x-0 bottom-0 transition-all duration-500 ease-out transform ${
                       hoveredMember === member.id
@@ -197,8 +187,6 @@ export function TeamSection() {
                     }`}
                     style={{
                       height: "40%",
-                      background:
-                        "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 50%, transparent 100%)",
                     }}
                   >
                     <div className="absolute bottom-16 left-4 right-4 space-y-3 h-3/4 flex flex-col justify-end">
