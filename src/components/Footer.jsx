@@ -20,18 +20,21 @@ export function Footer() {
           </div>
 
           {/* Right side links */}
-          <div className="flex flex-col sm:flex-row gap-6 lg:gap-8">
+          <div className="flex flex-row gap-6 lg:gap-8 items-center">
             <button
               onClick={openModal}
               className="text-white hover:text-gray-300 transition-colors duration-200 font-medium"
             >
               Terms and conditions
             </button>
+
             <a
-              href="#"
+              href="https://www.linkedin.com" // put your real LinkedIn URL here
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-white hover:text-gray-300 transition-colors duration-200 font-medium"
             >
-              Follow us on Instagram
+              LinkedIn
             </a>
           </div>
         </div>
@@ -39,8 +42,8 @@ export function Footer() {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white text-black rounded-2xl max-w-4xl w-11/12 p-8 relative">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white text-black rounded-2xl max-w-4xl w-full max-h-full overflow-auto p-8 relative">
             {/* Close button */}
             <button
               onClick={closeModal}
