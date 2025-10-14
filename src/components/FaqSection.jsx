@@ -78,7 +78,7 @@ export function FaqSection() {
             {faqData.map((faq, index) => (
               <motion.div
                 key={index}
-                className="border-b border-gray-200"
+                className=" bg-white px-4 rounded-lg "
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
@@ -89,7 +89,7 @@ export function FaqSection() {
                   onClick={() => toggleFaq(index)}
                   className="w-full py-6 flex items-center justify-between text-left transition-colors duration-200"
                 >
-                  <span className="text-[15px] md:text-md  text-black pr-4">
+                  <span className="text-[15px] md:text-md  text-black pr-4 font-[500] ">
                     {faq.question}
                   </span>
                   <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">

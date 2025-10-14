@@ -167,18 +167,20 @@ export function ContactSection() {
             variants={fadeUp}
           >
             <div>
-              <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-6">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6">
                 Let's talk.
               </h1>
-              <p className="text-xl lg:text-2xl text-gray-300">
+              <p className="text-sm sm:text-base md:text-lg text-gray-300">
                 Tell us about your project, whether it's a vlog, documentary, or
                 a TikTok short.
               </p>
             </div>
 
-            <div className="space-y-8">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-9 h-9 bg-white/10 rounded-full flex items-center justify-center mt-1">
+            {/* Features: Forced horizontal layout on mobile too */}
+            <div className="flex flex-row flex-wrap gap-4 sm:gap-6">
+              {/* Quick Response */}
+              <div className="flex items-start gap-3 w-[calc(50%-0.5rem)] min-w-[140px]">
+                <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center mt-1">
                   <svg
                     className="w-4 h-4 text-white"
                     fill="none"
@@ -194,18 +196,19 @@ export function ContactSection() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-1">
+                  <h3 className="text-sm sm:text-base font-semibold mb-1">
                     Quick response.
                   </h3>
-                  <p className="text-gray-300 text-sm">
+                  <p className="text-gray-300 text-xs sm:text-sm">
                     If you're ready to create and collaborate, we'd love to hear
                     from you.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-9 h-9 bg-white/10 rounded-full flex items-center justify-center mt-1">
+              {/* Clear Next Steps */}
+              <div className="flex items-start gap-3 w-[calc(50%-0.5rem)] min-w-[140px]">
+                <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center mt-1">
                   <svg
                     className="w-4 h-4 text-white"
                     fill="none"
@@ -221,10 +224,10 @@ export function ContactSection() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-1">
+                  <h3 className="text-sm sm:text-base font-semibold mb-1">
                     Clear next steps.
                   </h3>
-                  <p className="text-gray-300 text-sm">
+                  <p className="text-gray-300 text-xs sm:text-sm">
                     After your discovery call, we'll provide you with a detailed
                     plan and timeline.
                   </p>
