@@ -376,6 +376,12 @@ const MeetingPage = () => {
             <span className="font-semibold">free 20-min Google Meet call</span>{" "}
             to learn more about Feedbird and get any of your questions answered.
           </p>
+
+          <p className="text-sm text-gray-800 mb-6">
+            <span className="font-semibold ">Important:</span> Ensure you select
+            the correct AM/PM time to avoid mistakes, like 3am instead of 3pm.
+          </p>
+
           {selectedDate && (
             <div className="mb-6 p-4 bg-gray-100 border-l-4 border-gray-700 rounded-lg">
               <p className="text-xs text-gray-700 mb-1">Selected Date</p>
@@ -451,22 +457,17 @@ const MeetingPage = () => {
                         key={idx}
                         onClick={() => handleDateSelect(day)}
                         disabled={!day.isCurrentMonth || !day.isAvailable}
-                        className={`aspect-square flex items-center justify-center rounded-full text-sm font-medium transition-colors
-                          ${
-                            !day.isCurrentMonth
-                              ? "text-transparent cursor-default"
-                              : !day.isAvailable
-                              ? "text-gray-400 cursor-not-allowed"
-                              : " bg-gray-100 hover:bg-gray-800 text-white"
-                          }
-                          ${
-                            selectedDate?.getDate() === day.day &&
-                            day.isCurrentMonth &&
-                            day.isAvailable
-                              ? "bg-black text-white hover:bg-gray-800"
-                              : ""
-                          }
-                        `}
+                        className={`aspect-square flex items-center justify-center rounded-full text-sm font-medium transition-colors ${
+                          selectedDate?.getDate() === day.day &&
+                          day.isCurrentMonth &&
+                          day.isAvailable
+                            ? "bg-black text-white"
+                            : !day.isCurrentMonth
+                            ? "text-transparent cursor-default"
+                            : !day.isAvailable
+                            ? "text-gray-400 cursor-not-allowed"
+                            : "bg-gray-100 hover:bg-gray-800 text-gray-800 hover:text-white"
+                        }`}
                       >
                         {day.day}
                       </button>
