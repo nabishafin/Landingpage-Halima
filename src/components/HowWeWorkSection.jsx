@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CirclePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function HowWeWorkSection() {
@@ -33,7 +33,7 @@ export function HowWeWorkSection() {
   ];
 
   return (
-    <section className="py-20 px-6 bg-black text-white mt-16">
+    <section className="py-20 px-6 bg-black text-white mt-16 mx-2 rounded-2xl">
       <div className="w-full lg:w-11/12 mx-auto grid lg:grid-cols-2 gap-12 items-start">
         {/* LEFT CONTENT */}
         <motion.div
@@ -43,20 +43,29 @@ export function HowWeWorkSection() {
           viewport={{ once: true, amount: 0.3 }}
           className="space-y-4"
         >
+          <div className="flex items-center justify-start gap-1 mb-5 md:mb-10">
+            <CirclePlus fill="white" className="w-6 h-6 text-black font-bold" />
+            <span className="text-[14px] md:text-md md:font-semibold text-white mt-1">
+              How We Work
+            </span>
+          </div>
           <h2 className="text-3xl lg:text-4xl font-bold leading-snug">
             How We Work <br />
             <span className="text-[#686868]">with you</span>
           </h2>
 
-          <p className="text-white text-base leading-relaxed">
+          <p className="text-white text-[12px] md:text-[15px] leading-relaxed">
             Every brand has a different starting point. Some need clarity,
             others crave growth, and some are ready to scale with structure. At
-            <span className="text-white font-semibold"> The Re:Initiative</span>
+            <span className="text-[12px] md:text-[15px]">
+              {" "}
+              The Re:Initiative
+            </span>
             , we meet you where you are, guiding you through our proven service
             framework.
           </p>
 
-          <p className="text-white text-base leading-relaxed">
+          <p className="text-[12px] md:text-[15px]">
             To simplify your journey, we’ve shaped three engagement levels, each
             powered by our five pillars:
           </p>
@@ -78,10 +87,12 @@ export function HowWeWorkSection() {
               viewport={{ once: true, amount: 0.3 }}
             >
               <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
-              <p className="text-white mb-2 text-sm leading-relaxed">
+              <p className="text-white mb-2 text-sm leading-relaxed text-[11px] md:text-[14px]">
                 {step.description}
               </p>
-              <p className="text-gray-400 italic text-sm">{step.powered}</p>
+              <p className="text-gray-400 italic text-[12px] md:text-[15px] ">
+                {step.powered}
+              </p>
             </motion.div>
           ))}
 
@@ -95,7 +106,7 @@ export function HowWeWorkSection() {
           >
             <Button
               onClick={() => router.push("/meeting")}
-              className="bg-white w-40 text-black py-3 rounded-full font-semibold flex items-center gap-2 hover:bg-gray-200 transition"
+              className="bg-transparent border-[1px] border-white/50 w-40 text-white py-3 rounded-full font-semibold flex items-center gap-2  transition"
             >
               Enquire <ArrowRight size={18} />
             </Button>

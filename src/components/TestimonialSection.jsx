@@ -1,5 +1,6 @@
 "use client";
 
+import { CirclePlus } from "lucide-react";
 import pic from "../../public/testomonial.jpg";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -35,6 +36,12 @@ export function TestimonialSection() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.3 }}
         >
+          <div className="flex items-center justify-start gap-1 mb-5 md:mb-16">
+            <CirclePlus fill="black" className="w-6 h-6 text-white font-bold" />
+            <span className="text-[14px] md:text-md md:font-semibold text-black mt-1">
+              What We Do
+            </span>
+          </div>
           <h2 className="text-3xl lg:text-6xl text-black leading-tight font-bold">
             Hall of Fame Marketer Bozoma St John, <br />
             <span className="text-[#686868]">said this about us</span>
