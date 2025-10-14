@@ -89,14 +89,14 @@ export function FaqSection() {
                   onClick={() => toggleFaq(index)}
                   className="w-full py-6 flex items-center justify-between text-left transition-colors duration-200"
                 >
-                  <span className="text-lg font-medium text-black pr-4">
+                  <span className="text-[15px] md:text-md  text-black pr-4">
                     {faq.question}
                   </span>
                   <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
                     {openIndex === index ? (
-                      <Minus className="w-5 h-5 text-black" />
+                      <Minus className="w-4 h-4 md:w-5 md:h-5 text-white bg-black rounded-full" />
                     ) : (
-                      <Plus className="w-5 h-5 text-black" />
+                      <Plus className="w-4 h-4 md:w-5 md:h-5   text-white bg-black rounded-full" />
                     )}
                   </div>
                 </button>
@@ -109,7 +109,7 @@ export function FaqSection() {
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.4, ease: "easeOut" }}
                   >
-                    <p className="text-gray-600 leading-relaxed">
+                    <p className="text-gray-600 leading-relaxed text-[13px] md:text-md ">
                       {faq.answer}
                     </p>
                   </motion.div>
