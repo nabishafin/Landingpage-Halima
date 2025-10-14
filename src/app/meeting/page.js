@@ -7,24 +7,23 @@ import {
   ChevronRight,
   ArrowLeft,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 const MeetingPage = () => {
-  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [showForm, setShowForm] = useState(false);
-  const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
+    websiteURL: "",
+    whyInterested: "",
+    timeConfirmed: false,
     additionalInfo: "",
   });
 
@@ -35,22 +34,18 @@ const MeetingPage = () => {
     budgetAllocated: "",
   });
 
-  const [timezoneInfo, setTimezoneInfo] = useState({ name: "" });
+  const [timezoneInfo, setTimezoneInfo] = useState({ name: "US/Eastern" });
 
   const timezones = [
-    { label: "Europe/London", value: "Europe/London" },
-    { label: "Europe/Berlin", value: "Europe/Berlin" },
-    { label: "Africa/Johannesburg", value: "Africa/Johannesburg" },
     { label: "US/Eastern", value: "US/Eastern" },
     { label: "US/Central", value: "US/Central" },
-    { label: "Asia/Dhaka", value: "Asia/Dhaka" },
-    { label: "Asia/Tokyo", value: "Asia/Tokyo" },
-    { label: "Australia/Sydney", value: "Australia/Sydney" },
+    { label: "US/Pacific", value: "US/Pacific" },
+    { label: "US/Mountain", value: "US/Mountain" },
+    { label: "Europe/London", value: "Europe/London" },
+    { label: "Europe/Berlin", value: "Europe/Berlin" },
   ];
 
   const timeSlots = [
-    "8:00 AM",
-    "8:30 AM",
     "9:00 AM",
     "9:30 AM",
     "10:00 AM",
@@ -68,7 +63,6 @@ const MeetingPage = () => {
     "4:00 PM",
     "4:30 PM",
     "5:00 PM",
-    "5:30 PM",
   ];
 
   const priorityOptions = [
@@ -90,6 +84,17 @@ const MeetingPage = () => {
     "Not at this time",
   ];
 
+  const isDateAvailable = (date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const maxDate = new Date();
+    maxDate.setDate(today.getDate() + 14);
+    maxDate.setHours(0, 0, 0, 0);
+
+    return date >= today && date <= maxDate;
+  };
+
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -98,32 +103,61 @@ const MeetingPage = () => {
     const daysInPrevMonth = new Date(year, month, 0).getDate();
     const days = [];
 
+    // Previous month days
     for (let i = 0; i < firstDay; i++) {
+      const prevMonthDay = daysInPrevMonth - firstDay + i + 1;
+      const prevMonthDate = new Date(year, month - 1, prevMonthDay);
       days.push({
-        day: daysInPrevMonth - firstDay + i + 1,
+        day: prevMonthDay,
         isCurrentMonth: false,
+        isAvailable: false,
       });
     }
+
+    // Current month days
     for (let i = 1; i <= daysInMonth; i++) {
-      days.push({ day: i, isCurrentMonth: true });
+      const currentDate = new Date(year, month, i);
+      const isAvailable = isDateAvailable(currentDate);
+      days.push({
+        day: i,
+        isCurrentMonth: true,
+        isAvailable: isAvailable,
+      });
     }
+
     return days;
   };
 
   const formatMonth = (date) =>
     date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
-  const handlePrevMonth = () =>
-    setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1)
+  const handlePrevMonth = () => {
+    const prevMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() - 1
     );
-  const handleNextMonth = () =>
-    setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1)
+    const today = new Date();
+    const minDate = new Date(today.getFullYear(), today.getMonth());
+    if (prevMonth >= minDate) {
+      setCurrentDate(prevMonth);
+    }
+  };
+
+  const handleNextMonth = () => {
+    const nextMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1
     );
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 14);
+    const maxMonth = new Date(maxDate.getFullYear(), maxDate.getMonth());
+    if (nextMonth <= maxMonth) {
+      setCurrentDate(nextMonth);
+    }
+  };
 
   const handleDateSelect = (day) => {
-    if (day.isCurrentMonth) {
+    if (day.isCurrentMonth && day.isAvailable) {
       const selected = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth(),
@@ -131,23 +165,21 @@ const MeetingPage = () => {
       );
       setSelectedDate(selected);
       setSelectedTime(null);
-      setShowForm(false);
-      setShowQuestionnaire(false);
     }
   };
 
   const handleTimeSelect = (time) => {
-    if (!timezoneInfo.name) {
-      setError("Please select a timezone before choosing a time.");
-      return;
-    }
     setSelectedTime(time);
-    setShowQuestionnaire(true);
     setError("");
   };
 
-  const handleInputChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
 
   const handleQuestionnaireChange = (field, value) => {
     setQuestionnaireData((prev) => ({
@@ -156,16 +188,46 @@ const MeetingPage = () => {
     }));
   };
 
-  const handleQuestionnaireSubmit = (e) => {
-    e.preventDefault();
+  const handleNextPage = () => {
+    setError("");
+    if (!selectedDate || !selectedTime) {
+      setError("Please select both date and time.");
+      return;
+    }
+    setCurrentPage(2);
+  };
 
-    // Validate brand description has minimum 5 words (reduced from 20)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    // Validate form
+    if (!formData.name || !formData.email) {
+      setError("Please fill in Name and Email.");
+      return;
+    }
+
+    if (!formData.timeConfirmed) {
+      setError("Please confirm you've checked the time and timezone.");
+      return;
+    }
+
+    if (
+      !formData.phoneNumber ||
+      !formData.websiteURL ||
+      !formData.whyInterested
+    ) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
+    // Validate questionnaire - UPDATED TO 20 WORDS
     const wordCount = questionnaireData.brandDescription
       .trim()
       .split(/\s+/)
       .filter((word) => word.length > 0).length;
-    if (wordCount < 5) {
-      setError("Please provide at least 5 words about your brand.");
+    if (wordCount < 20) {
+      setError("Please provide at least 20 words about your brand.");
       return;
     }
 
@@ -174,27 +236,7 @@ const MeetingPage = () => {
       !questionnaireData.businessStage ||
       !questionnaireData.budgetAllocated
     ) {
-      setError("Please answer all questions.");
-      return;
-    }
-
-    setShowQuestionnaire(false);
-    setShowForm(true);
-    setError("");
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    if (!formData.firstName || !formData.lastName || !formData.email) {
-      setError(
-        "Please fill in all required fields (First name, Last name, Email)."
-      );
-      return;
-    }
-    if (!timezoneInfo.name) {
-      setError("Please select a timezone.");
+      setError("Please answer all business information questions.");
       return;
     }
 
@@ -205,34 +247,16 @@ const MeetingPage = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
+          ...formData,
           date: selectedDate.toISOString(),
           time: selectedTime,
           timezone: timezoneInfo.name,
-          additionalInfo: formData.additionalInfo,
-          // Include questionnaire data
           questionnaire: questionnaireData,
         }),
       });
       const result = await response.json();
       if (result.success) {
         setSuccess(true);
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          additionalInfo: "",
-        });
-        setQuestionnaireData({
-          brandDescription: "",
-          currentPriority: "",
-          businessStage: "",
-          budgetAllocated: "",
-        });
       } else {
         setError("Failed to schedule meeting. Please try again.");
       }
@@ -252,7 +276,9 @@ const MeetingPage = () => {
     });
   };
 
-  const handleBackToWebsite = () => router.push("/");
+  const handleBackToWebsite = () => {
+    window.location.href = "/";
+  };
 
   if (success) {
     return (
@@ -277,17 +303,31 @@ const MeetingPage = () => {
             Meeting Scheduled!
           </h2>
           <p className="text-gray-600 mb-6">
-            Your meeting has been successfully scheduled. You&apos;ll receive a
+            Your meeting has been successfully scheduled. You'll receive a
             confirmation email shortly.
           </p>
           <div className="space-y-3">
             <button
               onClick={() => {
                 setSuccess(false);
+                setCurrentPage(1);
                 setSelectedDate(null);
                 setSelectedTime(null);
-                setShowForm(false);
-                setShowQuestionnaire(false);
+                setFormData({
+                  name: "",
+                  email: "",
+                  phoneNumber: "",
+                  websiteURL: "",
+                  whyInterested: "",
+                  timeConfirmed: false,
+                  additionalInfo: "",
+                });
+                setQuestionnaireData({
+                  brandDescription: "",
+                  currentPriority: "",
+                  businessStage: "",
+                  budgetAllocated: "",
+                });
               }}
               className="w-full bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900 font-semibold transition-colors"
             >
@@ -306,55 +346,51 @@ const MeetingPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-lg max-w-6xl w-full flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 py-8">
+      <div className="bg-white rounded-lg shadow-lg max-w-6xl w-full flex flex-col lg:flex-row min-h-[600px]">
         {/* Left Sidebar */}
-        <div className="lg:w-96 p-10 border-r border-gray-300">
-          <div className="flex items-center gap-4 mb-8">
+        <div className="lg:w-80 p-6 border-r border-gray-300">
+          <div className="flex items-center gap-3 mb-6">
             <button
               onClick={handleBackToWebsite}
-              className="flex items-center gap-3 text-gray-700 hover:text-gray-900 transition-colors text-lg font-semibold"
+              className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors text-sm font-semibold"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-4 h-4" />
               <span>Back to Website</span>
             </button>
           </div>
-          <div className="flex items-center gap-6 mb-8">
-            <div className="flex gap-3 items-center justify-center text-3xl font-extrabold">
-              <div className="border-4 px-4 py-2 rounded-lg border-gray-800 text-xl">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex gap-2 items-center justify-center text-xl font-extrabold">
+              <div className="border-4 px-3 py-1.5 rounded-lg border-gray-800 text-base">
                 Re:
               </div>
-              <div className="uppercase tracking-wider text-2xl">
-                Initiative
-              </div>
+              <div className="uppercase tracking-wider text-lg">Initiative</div>
             </div>
           </div>
-          <div className="flex items-center gap-3 text-gray-700 mb-6 text-lg">
-            <Clock className="w-6 h-6" />
+          <div className="flex items-center gap-2 text-gray-700 mb-4 text-sm">
+            <Clock className="w-5 h-5" />
             <span>20 min</span>
           </div>
-          <p className="text-base text-gray-800 mb-8">
+          <p className="text-sm text-gray-800 mb-6">
             Book a{" "}
-            <span className="font-semibold text-lg">
-              free 20-min Google Meet call
-            </span>{" "}
+            <span className="font-semibold">free 20-min Google Meet call</span>{" "}
             to learn more about Feedbird and get any of your questions answered.
           </p>
           {selectedDate && (
-            <div className="mb-8 p-6 bg-gray-100 border-l-4 border-gray-700 rounded-lg">
-              <p className="text-sm text-gray-700 mb-2">Selected Date</p>
-              <p className="font-bold text-gray-900 text-lg">
+            <div className="mb-6 p-4 bg-gray-100 border-l-4 border-gray-700 rounded-lg">
+              <p className="text-xs text-gray-700 mb-1">Selected Date</p>
+              <p className="font-bold text-gray-900 text-sm">
                 {formatSelectedDate()}
               </p>
               {selectedTime && (
                 <>
-                  <p className="text-sm text-gray-700 mt-3 mb-1">
+                  <p className="text-xs text-gray-700 mt-2 mb-1">
                     Selected Time
                   </p>
-                  <p className="font-bold text-gray-900 text-lg">
+                  <p className="font-bold text-gray-900 text-sm">
                     {selectedTime}
                   </p>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 mt-1">
                     {timezoneInfo.name}
                   </p>
                 </>
@@ -362,40 +398,47 @@ const MeetingPage = () => {
             </div>
           )}
         </div>
-
         {/* Right Content */}
-        <div className="flex-1 p-8">
-          {!showQuestionnaire && !showForm ? (
+        <div className="flex-1 p-6">
+          {/* Page 1: Date & Time Selection */}
+          {currentPage === 1 && (
             <>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-6">
                 Select a Date & Time
               </h2>
-              <div className="grid lg:grid-cols-2 gap-8">
-                {/* Calendar */}
+
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg mb-6 text-sm">
+                  {error}
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-8">
+                {/* Left: Calendar */}
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <button
                       onClick={handlePrevMonth}
-                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                      className="p-1 hover:bg-gray-100 rounded transition-colors"
                     >
-                      <ChevronLeft className="w-5 h-5 text-gray-600" />
+                      <ChevronLeft className="w-4 h-4 text-gray-600" />
                     </button>
-                    <h3 className="font-semibold text-gray-900">
+                    <h4 className="font-semibold text-gray-900 text-sm">
                       {formatMonth(currentDate)}
-                    </h3>
+                    </h4>
                     <button
                       onClick={handleNextMonth}
-                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                      className="p-1 hover:bg-gray-100 rounded transition-colors"
                     >
-                      <ChevronRight className="w-5 h-5 text-gray-600" />
+                      <ChevronRight className="w-4 h-4 text-gray-600" />
                     </button>
                   </div>
                   <div className="grid grid-cols-7 gap-1 mb-2">
-                    {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(
+                    {["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"].map(
                       (day) => (
                         <div
                           key={day}
-                          className="text-center text-xs font-semibold text-gray-600 py-2"
+                          className="text-center text-xs font-semibold text-gray-600 py-1"
                         >
                           {day}
                         </div>
@@ -407,17 +450,20 @@ const MeetingPage = () => {
                       <button
                         key={idx}
                         onClick={() => handleDateSelect(day)}
-                        disabled={!day.isCurrentMonth}
+                        disabled={!day.isCurrentMonth || !day.isAvailable}
                         className={`aspect-square flex items-center justify-center rounded-full text-sm font-medium transition-colors
                           ${
                             !day.isCurrentMonth
-                              ? "text-gray-300 cursor-not-allowed"
-                              : "text-gray-900 hover:bg-gray-100"
+                              ? "text-transparent cursor-default"
+                              : !day.isAvailable
+                              ? "text-gray-400 cursor-not-allowed"
+                              : " bg-gray-100 hover:bg-gray-800 text-white"
                           }
                           ${
                             selectedDate?.getDate() === day.day &&
-                            day.isCurrentMonth
-                              ? "bg-gray-800 text-white"
+                            day.isCurrentMonth &&
+                            day.isAvailable
+                              ? "bg-black text-white hover:bg-gray-800"
                               : ""
                           }
                         `}
@@ -426,331 +472,345 @@ const MeetingPage = () => {
                       </button>
                     ))}
                   </div>
+
                   {/* Timezone */}
                   <div className="mt-6">
-                    <label className="text-sm font-semibold mb-2 text-gray-900 block">
-                      Select Timezone *
+                    <label className="text-xs font-semibold mb-1 text-gray-900 flex items-center gap-1">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      Time zone
                     </label>
                     <select
                       value={timezoneInfo.name}
                       onChange={(e) =>
                         setTimezoneInfo({ name: e.target.value })
                       }
-                      required
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                      className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     >
-                      <option value="">Select a timezone</option>
                       {timezones.map((tz) => (
                         <option key={tz.value} value={tz.value}>
                           {tz.label}
                         </option>
                       ))}
                     </select>
-                    {error && !timezoneInfo.name && (
-                      <p className="text-red-500 text-xs mt-1">{error}</p>
-                    )}
                   </div>
                 </div>
-
-                {/* Time Slots */}
+                {/* Right: Time Slots */}
                 <div>
                   {selectedDate ? (
-                    <>
-                      <p className="font-semibold text-gray-900 mb-4">
-                        {formatSelectedDate()}
-                      </p>
-                      {error && !timezoneInfo.name && (
-                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-                          {error}
-                        </div>
-                      )}
-                      <div className="space-y-2 max-h-96 overflow-y-auto pr-2">
-                        {timeSlots.map((time) => (
-                          <button
-                            key={time}
-                            onClick={() => handleTimeSelect(time)}
-                            disabled={!timezoneInfo.name}
-                            className={`w-full text-left px-4 py-3 border rounded-lg font-medium transition-colors
-                              ${
-                                selectedTime === time
-                                  ? "bg-gray-800 text-white border-gray-800"
-                                  : "border-gray-400 text-gray-800 hover:bg-gray-100"
-                              }
-                              ${
-                                !timezoneInfo.name
-                                  ? "opacity-50 cursor-not-allowed"
-                                  : ""
-                              }
-                            `}
-                          >
-                            {time}
-                          </button>
-                        ))}
-                      </div>
-                    </>
+                    <div className="text-sm font-semibold text-gray-900 mb-4">
+                      {formatSelectedDate()}
+                    </div>
                   ) : (
-                    <div className="flex items-center justify-center h-full text-gray-400 text-sm">
+                    <div className="text-sm text-gray-500 mb-4">
                       Select a date to see available times
                     </div>
                   )}
+                  <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+                    {timeSlots.map((time) => (
+                      <button
+                        key={time}
+                        onClick={() => handleTimeSelect(time)}
+                        disabled={!selectedDate}
+                        className={`w-full text-center px-3 py-2 border rounded-lg text-sm font-medium transition-colors
+                          ${
+                            !selectedDate
+                              ? "text-gray-400 cursor-not-allowed bg-gray-50 border-gray-200"
+                              : selectedTime === time
+                              ? "bg-black text-white border-black"
+                              : "border-blue-200 bg-white text-gray-900 hover:bg-gray-50 hover:border-gray-400"
+                          }
+                        `}
+                      >
+                        {time}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
+
+              {/* Next Button */}
+              <button
+                onClick={handleNextPage}
+                className="w-full mt-8 bg-gray-800 text-white py-2.5 rounded-lg hover:bg-gray-900 font-semibold transition-colors text-sm"
+              >
+                Next
+              </button>
             </>
-          ) : showQuestionnaire ? (
-            <div>
-              <button
-                onClick={() => setShowQuestionnaire(false)}
-                className="flex items-center gap-2 text-gray-800 mb-6 hover:underline transition-colors"
-              >
-                <ChevronLeft className="w-4 h-4" /> Back to time selection
-              </button>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Tell Us About Your Business
-              </h2>
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-                  {error}
-                </div>
-              )}
-              <form
-                onSubmit={handleQuestionnaireSubmit}
-                className="space-y-6 max-w-2xl"
-              >
-                {/* Question 1 */}
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-900">
-                    1. Tell us a little about your brand. (5 words minimum) *
-                  </label>
-                  <textarea
-                    value={questionnaireData.brandDescription}
-                    onChange={(e) =>
-                      handleQuestionnaireChange(
-                        "brandDescription",
-                        e.target.value
-                      )
-                    }
-                    required
-                    rows={4}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
-                    placeholder="Describe your brand, products/services, target audience, and what makes you unique..."
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    {
-                      questionnaireData.brandDescription
-                        .trim()
-                        .split(/\s+/)
-                        .filter((word) => word.length > 0).length
-                    }{" "}
-                    words
-                    {questionnaireData.brandDescription
-                      .trim()
-                      .split(/\s+/)
-                      .filter((word) => word.length > 0).length < 5 &&
-                      ` (minimum 5 words required)`}
-                  </p>
-                </div>
+          )}
 
-                {/* Question 2 */}
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-900">
-                    2. Which area best describes your current priority? *
-                  </label>
-                  <div className="space-y-2">
-                    {priorityOptions.map((option) => (
-                      <label
-                        key={option}
-                        className="flex items-center space-x-3 cursor-pointer"
-                      >
-                        <input
-                          type="radio"
-                          name="currentPriority"
-                          value={option}
-                          checked={questionnaireData.currentPriority === option}
-                          onChange={(e) =>
-                            handleQuestionnaireChange(
-                              "currentPriority",
-                              e.target.value
-                            )
-                          }
-                          className="text-gray-800 focus:ring-gray-500"
-                          required
-                        />
-                        <span className="text-sm text-gray-700">{option}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Question 3 */}
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-900">
-                    3. What stage is your business at? *
-                  </label>
-                  <div className="space-y-2">
-                    {businessStageOptions.map((option) => (
-                      <label
-                        key={option}
-                        className="flex items-center space-x-3 cursor-pointer"
-                      >
-                        <input
-                          type="radio"
-                          name="businessStage"
-                          value={option}
-                          checked={questionnaireData.businessStage === option}
-                          onChange={(e) =>
-                            handleQuestionnaireChange(
-                              "businessStage",
-                              e.target.value
-                            )
-                          }
-                          className="text-gray-800 focus:ring-gray-500"
-                          required
-                        />
-                        <span className="text-sm text-gray-700">{option}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Question 4 */}
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-900">
-                    4. Do you have a budget allocated for brand strategy and
-                    creative direction? *
-                  </label>
-                  <div className="space-y-2">
-                    {budgetOptions.map((option) => (
-                      <label
-                        key={option}
-                        className="flex items-center space-x-3 cursor-pointer"
-                      >
-                        <input
-                          type="radio"
-                          name="budgetAllocated"
-                          value={option}
-                          checked={questionnaireData.budgetAllocated === option}
-                          onChange={(e) =>
-                            handleQuestionnaireChange(
-                              "budgetAllocated",
-                              e.target.value
-                            )
-                          }
-                          className="text-gray-800 focus:ring-gray-500"
-                          required
-                        />
-                        <span className="text-sm text-gray-700">{option}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
+          {/* Page 2: Form & Questions */}
+          {currentPage === 2 && (
+            <>
+              <div className="flex items-center gap-3 mb-4">
                 <button
-                  type="submit"
-                  className="w-full bg-gray-800 text-white py-3 rounded-lg hover:bg-gray-900 font-semibold transition-colors"
+                  onClick={() => setCurrentPage(1)}
+                  className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                  Continue to Details
+                  <ArrowLeft className="w-4 h-4 text-gray-600" />
                 </button>
-              </form>
-            </div>
-          ) : (
-            <div>
-              <button
-                onClick={() => {
-                  setShowForm(false);
-                  setShowQuestionnaire(true);
-                }}
-                className="flex items-center gap-2 text-gray-800 mb-6 hover:underline transition-colors"
-              >
-                <ChevronLeft className="w-4 h-4" /> Back to questions
-              </button>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Enter Your Details
-              </h2>
+                <h2 className="text-lg font-bold text-gray-900">
+                  Enter Details
+                </h2>
+              </div>
+
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+                <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg mb-4 text-sm">
                   {error}
                 </div>
               )}
-              <form onSubmit={handleSubmit} className="space-y-4 max-w-xl">
-                <div className="grid grid-cols-2 gap-4">
+
+              <div className="space-y-5 max-w-2xl">
+                {/* Basic Info */}
+                <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-900">
-                      First Name *
+                    <label className="block text-xs font-medium mb-1 text-gray-900">
+                      Name *
                     </label>
                     <input
                       type="text"
-                      name="firstName"
-                      value={formData.firstName}
+                      name="name"
+                      value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
-                      placeholder="Enter your first name"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     />
                   </div>
+
                   <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-900">
-                      Last Name *
+                    <label className="block text-xs font-medium mb-1 text-gray-900">
+                      Email *
                     </label>
                     <input
-                      type="text"
-                      name="lastName"
-                      value={formData.lastName}
+                      type="email"
+                      name="email"
+                      value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
-                      placeholder="Enter your last name"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-start gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="timeConfirmed"
+                        checked={formData.timeConfirmed}
+                        onChange={handleInputChange}
+                        className="mt-0.5 text-gray-800 focus:ring-gray-500"
+                      />
+                      <span className="text-xs text-gray-700">
+                        Please confirm you've checked the time and timezone to
+                        avoid selecting a night-time slot by mistake (e.g., 3 AM
+                        instead of 3 PM). *
+                      </span>
+                    </label>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium mb-1 text-gray-900">
+                      What's your phone number? *
+                    </label>
+                    <input
+                      type="tel"
+                      name="phoneNumber"
+                      value={formData.phoneNumber}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium mb-1 text-gray-900">
+                      Website URL (or link to your socials) *
+                    </label>
+                    <input
+                      type="url"
+                      name="websiteURL"
+                      value={formData.websiteURL}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium mb-1 text-gray-900">
+                      Why are you interested in a call? *
+                    </label>
+                    <textarea
+                      name="whyInterested"
+                      value={formData.whyInterested}
+                      onChange={handleInputChange}
+                      required
+                      rows={2}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     />
                   </div>
                 </div>
+
+                {/* Business Information */}
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-900">
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
-                    placeholder="Enter your email address"
-                  />
+                  <h3 className="font-semibold text-gray-900 mb-3 text-base">
+                    Business Information
+                  </h3>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-medium mb-1.5 text-gray-900">
+                        Tell us a little about your brand. (20 words minimum) *
+                      </label>
+                      <textarea
+                        value={questionnaireData.brandDescription}
+                        onChange={(e) =>
+                          handleQuestionnaireChange(
+                            "brandDescription",
+                            e.target.value
+                          )
+                        }
+                        required
+                        rows={3}
+                        className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                        placeholder="Describe your brand, products/services, target audience, and what makes you unique..."
+                      />
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        {
+                          questionnaireData.brandDescription
+                            .trim()
+                            .split(/\s+/)
+                            .filter((word) => word.length > 0).length
+                        }{" "}
+                        words (minimum 20 required)
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium mb-1.5 text-gray-900">
+                        Which area best describes your current priority? *
+                      </label>
+                      <div className="space-y-1.5">
+                        {priorityOptions.map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2 cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name="currentPriority"
+                              value={option}
+                              checked={
+                                questionnaireData.currentPriority === option
+                              }
+                              onChange={(e) =>
+                                handleQuestionnaireChange(
+                                  "currentPriority",
+                                  e.target.value
+                                )
+                              }
+                              className="text-gray-800 focus:ring-gray-500"
+                              required
+                            />
+                            <span className="text-xs text-gray-700">
+                              {option}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium mb-1.5 text-gray-900">
+                        What stage is your business at? *
+                      </label>
+                      <div className="space-y-1.5">
+                        {businessStageOptions.map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2 cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name="businessStage"
+                              value={option}
+                              checked={
+                                questionnaireData.businessStage === option
+                              }
+                              onChange={(e) =>
+                                handleQuestionnaireChange(
+                                  "businessStage",
+                                  e.target.value
+                                )
+                              }
+                              className="text-gray-800 focus:ring-gray-500"
+                              required
+                            />
+                            <span className="text-xs text-gray-700">
+                              {option}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium mb-1.5 text-gray-900">
+                        Do you have a budget allocated for brand strategy and
+                        creative direction? *
+                      </label>
+                      <div className="space-y-1.5">
+                        {budgetOptions.map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2 cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name="budgetAllocated"
+                              value={option}
+                              checked={
+                                questionnaireData.budgetAllocated === option
+                              }
+                              onChange={(e) =>
+                                handleQuestionnaireChange(
+                                  "budgetAllocated",
+                                  e.target.value
+                                )
+                              }
+                              className="text-gray-800 focus:ring-gray-500"
+                              required
+                            />
+                            <span className="text-xs text-gray-700">
+                              {option}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-900">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
-                    placeholder="Enter your phone number (optional)"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-900">
-                    Additional Information
-                  </label>
-                  <textarea
-                    name="additionalInfo"
-                    value={formData.additionalInfo}
-                    onChange={handleInputChange}
-                    rows="4"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
-                    placeholder="Please share anything that will help prepare for our meeting."
-                  />
-                </div>
+
+                {/* Submit Button */}
                 <button
-                  type="submit"
+                  onClick={handleSubmit}
                   disabled={loading}
-                  className="w-full bg-gray-800 text-white py-3 rounded-lg hover:bg-gray-900 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="w-full bg-gray-800 text-white py-2.5 rounded-lg hover:bg-gray-900 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
                 >
-                  {loading ? "Scheduling..." : "Schedule Event"}
+                  {loading ? "Scheduling..." : "Schedule Meeting"}
                 </button>
-              </form>
-            </div>
+              </div>
+            </>
           )}
         </div>
       </div>
