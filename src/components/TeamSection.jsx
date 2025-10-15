@@ -141,7 +141,7 @@ export function TeamSection() {
                 <motion.div
                   key={member.id}
                   className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40
-                             h-[530px] sm:h-[420px] lg:h-[400px]" // ✅ responsive height
+                             h-[530px] sm:h-[420px] lg:h-[400px]"
                   onMouseEnter={() => setHoveredMember(member.id)}
                   onMouseLeave={() => setHoveredMember(null)}
                   onTouchStart={() => setHoveredMember(member.id)}
@@ -160,7 +160,7 @@ export function TeamSection() {
                         : "group-hover:scale-110 group-hover:blur-sm"
                     }`}
                     style={{
-                      objectPosition: "center top 65%", // moves image down a bit
+                      objectPosition: "center top 65%",
                     }}
                     priority={index < 2}
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
