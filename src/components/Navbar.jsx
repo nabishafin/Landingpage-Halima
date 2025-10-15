@@ -30,7 +30,7 @@ const Navbar = () => {
             {/* Logo */}
             <Link href="/" className="text-3xl font-bold flex-shrink-0">
               <div className="flex gap-1 items-center justify-center">
-                <div className="border-2 border-black rounded-[1px] px-1">
+                <div className="border-2 border-black rounded-[4px] px-1">
                   Re:
                 </div>
                 <div>Initiative</div>
