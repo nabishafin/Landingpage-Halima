@@ -1,3 +1,4 @@
+// app/api/contact/route.js
 import nodemailer from "nodemailer";
 
 export async function POST(req) {
@@ -41,120 +42,172 @@ export async function POST(req) {
       );
     }
 
-    // Meeting scheduling email with questionnaire
-    const meetingDate = data.date
-      ? new Date(data.date).toLocaleDateString("en-US", {
-          weekday: "long",
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        })
-      : "Not specified";
+    // Determine email type based on received data
+    let emailSubject, emailHtml;
 
-    const emailSubject = `📅 New Meeting Scheduled with ${data.name}`;
-    const emailHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-        <h2 style="color: #000; text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">New Meeting Scheduled! 🗓️</h2>
-        
-        <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <h3 style="color: #000; margin-top: 0;">Meeting Details</h3>
-          
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold; width: 120px;">Client Name:</td>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
-                data.name
-              }</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Email:</td>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee;">
-                <a href="mailto:${
-                  data.email
-                }" style="color: #007bff; text-decoration: none;">${
-      data.email
-    }</a>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Phone:</td>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
-                data.phoneNumber || "Not provided"
-              }</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Website:</td>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
-                data.websiteURL || "Not provided"
-              }</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Date:</td>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${meetingDate}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Time:</td>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
-                data.time
-              } (${data.timezone})</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Why Interested:</td>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
-                data.whyInterested || "Not provided"
-              }</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Additional Info:</td>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
-                data.additionalInfo || "None"
-              }</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Time Confirmed:</td>
-              <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
-                data.timeConfirmed ? "Yes" : "No"
-              }</td>
-            </tr>
-          </table>
-        </div>
+    if (data.date && data.time) {
+      // This is a meeting scheduling request
+      const meetingDate = data.date
+        ? new Date(data.date).toLocaleDateString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })
+        : "Not specified";
 
-        <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #007bff;">
-          <h3 style="color: #000; margin-top: 0;">Pre-Meeting Questionnaire</h3>
+      emailSubject = `📅 New Meeting Scheduled with ${data.name}`;
+      emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+          <h2 style="color: #000; text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">New Meeting Scheduled! 🗓️</h2>
           
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-              <td style="padding: 8px 0; border-bottom: 1px solid #ddd; font-weight: bold; width: 180px; vertical-align: top;">Brand Description:</td>
-              <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">${
-                data.questionnaire.brandDescription || "Not provided"
-              }</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; border-bottom: 1px solid #ddd; font-weight: bold; vertical-align: top;">Current Priority:</td>
-              <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">${
-                data.questionnaire.currentPriority || "Not provided"
-              }</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; border-bottom: 1px solid #ddd; font-weight: bold; vertical-align: top;">Business Stage:</td>
-              <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">${
-                data.questionnaire.businessStage || "Not provided"
-              }</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; border-bottom: 1px solid #ddd; font-weight: bold; vertical-align: top;">Budget Allocated:</td>
-              <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">${
-                data.questionnaire.budgetAllocated || "Not provided"
-              }</td>
-            </tr>
-          </table>
+          <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #000; margin-top: 0;">Meeting Details</h3>
+            
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold; width: 120px;">Client Name:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
+                  data.name
+                }</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Email:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                  <a href="mailto:${
+                    data.email
+                  }" style="color: #007bff; text-decoration: none;">${
+        data.email
+      }</a>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Phone:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
+                  data.phoneNumber || "Not provided"
+                }</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Website:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
+                  data.websiteURL || "Not provided"
+                }</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Date:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${meetingDate}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Time:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
+                  data.time
+                } (${data.timezone})</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Why Interested:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
+                  data.whyInterested || "Not provided"
+                }</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Additional Info:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
+                  data.additionalInfo || "None"
+                }</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Time Confirmed:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
+                  data.timeConfirmed ? "Yes" : "No"
+                }</td>
+              </tr>
+            </table>
+          </div>
+
+          ${
+            data.questionnaire
+              ? `
+          <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #007bff;">
+            <h3 style="color: #000; margin-top: 0;">Pre-Meeting Questionnaire</h3>
+            
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd; font-weight: bold; width: 180px; vertical-align: top;">Brand Description:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">${
+                  data.questionnaire.brandDescription || "Not provided"
+                }</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd; font-weight: bold; vertical-align: top;">Current Priority:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">${
+                  data.questionnaire.currentPriority || "Not provided"
+                }</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd; font-weight: bold; vertical-align: top;">Business Stage:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">${
+                  data.questionnaire.businessStage || "Not provided"
+                }</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd; font-weight: bold; vertical-align: top;">Budget Allocated:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #ddd;">${
+                  data.questionnaire.budgetAllocated || "Not provided"
+                }</td>
+              </tr>
+            </table>
+          </div>
+          `
+              : ""
+          }
+          
+          <p style="color: #666; font-size: 14px; text-align: center;">
+            This meeting was scheduled through your booking system.
+          </p>
         </div>
-        
-        <p style="color: #666; font-size: 14px; text-align: center;">
-          This meeting was scheduled through your booking system.
-        </p>
-      </div>
-    `;
+      `;
+    } else {
+      // This is a regular contact form submission
+      emailSubject = `📧 New Message from ${data.name}`;
+      emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+          <h2 style="color: #000; text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">New Contact Form Submission! ✉️</h2>
+          
+          <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #000; margin-top: 0;">Contact Details</h3>
+            
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold; width: 120px;">Name:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
+                  data.name
+                }</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Email:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                  <a href="mailto:${
+                    data.email
+                  }" style="color: #007bff; text-decoration: none;">${
+        data.email
+      }</a>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold;">Message:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${
+                  data.message || "Not provided"
+                }</td>
+              </tr>
+            </table>
+          </div>
+          
+          <p style="color: #666; font-size: 14px; text-align: center;">
+            This message was sent through your website contact form.
+          </p>
+        </div>
+      `;
+    }
 
     // Send email
     try {
