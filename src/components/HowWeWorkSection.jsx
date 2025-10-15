@@ -108,7 +108,7 @@ export function HowWeWorkSection() {
               onClick={() => router.push("/meeting")}
               className="bg-transparent border-[1px] border-white/50 w-40 text-white py-3 rounded-full font-semibold flex items-center gap-2  transition"
             >
-              Enquire <ArrowRight size={18} />
+              Enquire
             </Button>
           </motion.div>
         </div>
