@@ -77,7 +77,7 @@ export function TeamSection() {
     <div className="data-scroll-section">
       <section className="py-0 md:py-16">
         <div className="w-full lg:w-11/12 mx-auto bg-white p-4 md:p-16 rounded-2xl">
-          <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-start md:items-center">
             {/* Left Content */}
             <motion.div
               className="space-y-8"
@@ -132,7 +132,7 @@ export function TeamSection() {
 
             {/* Right Team Grid */}
             <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-2"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 mt-8 md:mt-12"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
@@ -140,7 +140,8 @@ export function TeamSection() {
               {teamMembers.map((member, index) => (
                 <motion.div
                   key={member.id}
-                  className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40 h-[550px] sm:h-[400px]"
+                  className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40
+                             h-[530px] sm:h-[420px] lg:h-[400px]" // ✅ responsive height
                   onMouseEnter={() => setHoveredMember(member.id)}
                   onMouseLeave={() => setHoveredMember(null)}
                   onTouchStart={() => setHoveredMember(member.id)}
@@ -148,7 +149,7 @@ export function TeamSection() {
                   custom={index}
                   variants={fadeUp}
                 >
-                  {/* Image */}
+                  {/* ✅ Image adjustment */}
                   <Image
                     src={member.image}
                     alt={member.name}
@@ -158,10 +159,14 @@ export function TeamSection() {
                         ? "scale-110 blur-sm"
                         : "group-hover:scale-110 group-hover:blur-sm"
                     }`}
+                    style={{
+                      objectPosition: "center top 65%", // moves image down a bit
+                    }}
                     priority={index < 2}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
 
-                  {/* Role (top left) */}
+                  {/* Role */}
                   <div className="absolute top-4 left-4 right-4">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-white rounded-full opacity-80" />
@@ -178,7 +183,7 @@ export function TeamSection() {
                     </h3>
                   </div>
 
-                  {/* Description (hover reveal) */}
+                  {/* Description */}
                   <div
                     className={`absolute inset-x-0 bottom-0 transition-all duration-500 ease-out transform ${
                       hoveredMember === member.id
@@ -186,7 +191,7 @@ export function TeamSection() {
                         : "translate-y-full opacity-0"
                     }`}
                     style={{
-                      height: "40%",
+                      height: "45%",
                     }}
                   >
                     <div className="absolute bottom-16 left-4 right-4 space-y-3 h-3/4 flex flex-col justify-end">
