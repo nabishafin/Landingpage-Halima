@@ -22,13 +22,14 @@ export default function Home() {
   return (
     <>
       {showVideo && (
-        <div className="fixed inset-0 z-[10000] bg-black">
+        <div className="fixed inset-0 z-[10000] bg-black flex items-center justify-center">
           <video
             src="logo video.mp4"
             autoPlay
             muted
+            playsInline
             onEnded={handleVideoEnd}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
           />
         </div>
       )}
