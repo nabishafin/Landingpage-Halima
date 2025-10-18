@@ -34,16 +34,11 @@ const MeetingPage = () => {
     budgetAllocated: "",
   });
 
-  const [timezoneInfo, setTimezoneInfo] = useState({ name: "US/Eastern" });
+  // শুধুমাত্র London timezone
+  const [timezoneInfo, setTimezoneInfo] = useState({ name: "Europe/London" });
 
-  const timezones = [
-    { label: "US/Eastern", value: "US/Eastern" },
-    { label: "US/Central", value: "US/Central" },
-    { label: "US/Pacific", value: "US/Pacific" },
-    { label: "US/Mountain", value: "US/Mountain" },
-    { label: "Europe/London", value: "Europe/London" },
-    { label: "Europe/Berlin", value: "Europe/Berlin" },
-  ];
+  // শুধুমাত্র London timezone option
+  const timezones = [{ label: "Europe/London", value: "Europe/London" }];
 
   const timeSlots = [
     "9:00 AM",
@@ -208,7 +203,7 @@ const MeetingPage = () => {
     }
 
     if (!formData.timeConfirmed) {
-      setError("Please confirm you&apos;ve checked the time and timezone.");
+      setError("Please confirm you've checked the time and timezone.");
       return;
     }
 
@@ -303,7 +298,7 @@ const MeetingPage = () => {
             Meeting Scheduled!
           </h2>
           <p className="text-gray-600 mb-6">
-            Your meeting has been successfully scheduled. You&apos;ll receive a
+            Your meeting has been successfully scheduled. You'll receive a
             confirmation email shortly.
           </p>
           <div className="space-y-3">
@@ -475,7 +470,7 @@ const MeetingPage = () => {
                     ))}
                   </div>
 
-                  {/* Timezone - Moved to bottom on mobile */}
+                  {/* Timezone - শুধুমাত্র London timezone দেখাবে এবং disabled থাকবে */}
                   <div className="mt-6">
                     <label className="text-xs font-semibold mb-1 text-gray-900 flex items-center gap-1">
                       <svg
@@ -498,7 +493,8 @@ const MeetingPage = () => {
                       onChange={(e) =>
                         setTimezoneInfo({ name: e.target.value })
                       }
-                      className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      disabled
+                      className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs bg-gray-100 text-gray-600 cursor-not-allowed"
                     >
                       {timezones.map((tz) => (
                         <option key={tz.value} value={tz.value}>
@@ -506,6 +502,9 @@ const MeetingPage = () => {
                         </option>
                       ))}
                     </select>
+                    <p className="text-xs text-gray-500 mt-1">
+                      All times are shown in London timezone
+                    </p>
                   </div>
                 </div>
 
@@ -615,16 +614,16 @@ const MeetingPage = () => {
                         className="mt-0.5 text-gray-800 focus:ring-gray-500"
                       />
                       <span className="text-xs text-gray-700">
-                        Please confirm you&apos;ve checked the time and timezone
-                        to avoid selecting a night-time slot by mistake (e.g., 3
-                        AM instead of 3 PM). *
+                        Please confirm you've checked the time and timezone to
+                        avoid selecting a night-time slot by mistake (e.g., 3 AM
+                        instead of 3 PM). *
                       </span>
                     </label>
                   </div>
 
                   <div>
                     <label className="block text-xs font-medium mb-1 text-gray-900">
-                      What&apos;s your phone number? *
+                      What's your phone number? *
                     </label>
                     <input
                       type="tel"

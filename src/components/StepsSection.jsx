@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { CirclePlus } from "lucide-react";
 import EnquireButton from "./ui/EnquireButtton";
+import EnquireButtonwhite from "./ui/EnquireButtonwhite";
 
 export function StepsSection() {
   const steps = [
@@ -136,6 +137,7 @@ export function StepsSection() {
             </motion.div>
           ))}
         </div>
+        <EnquireButtonwhite />
       </div>
     </section>
   );
