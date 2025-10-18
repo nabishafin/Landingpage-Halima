@@ -26,7 +26,7 @@ export function TestimonialSection() {
   const [ref, inView] = useInView({ threshold: 0.3 });
 
   return (
-    <section className="py-2 md:py-16 px-4">
+    <section className="py-2 md:py-16 px-4 mt-10">
       <div className="w-full lg:w-11/12 mx-auto">
         {/* Header */}
         <motion.div
@@ -36,12 +36,12 @@ export function TestimonialSection() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.3 }}
         >
-          <div className="flex items-center justify-start gap-1 mb-5 md:mb-16">
+          {/* <div className="flex items-center justify-start gap-1 mb-5 md:mb-16">
             <CirclePlus fill="black" className="w-6 h-6 text-white font-bold" />
             <span className="text-[14px] md:text-md md:font-semibold text-black mt-1">
               What We Do
             </span>
-          </div>
+          </div> */}
           <h2 className="text-3xl lg:text-6xl text-black leading-tight font-bold">
             Hall of Fame Marketer Bozoma St John, <br />
             <span className="text-[#686868]">said this about us</span>
