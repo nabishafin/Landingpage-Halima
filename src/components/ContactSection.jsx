@@ -147,11 +147,11 @@ export function ContactSection() {
 
             <p className="text-xs text-gray-500 mt-4 text-center">
               By submitting, you agree to our{" "}
-              <a href="#" className="underline hover:text-gray-700">
+              <a href="#" className=" hover:text-gray-700">
                 Terms
               </a>{" "}
               and{" "}
-              <a href="#" className="underline hover:text-gray-700">
+              <a href="#" className=" hover:text-gray-700">
                 Privacy Policy
               </a>
               .

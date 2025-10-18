@@ -46,7 +46,7 @@ export function StepsSection() {
           <div className="flex items-center justify-start gap-1 mb-5 md:mb-16">
             <CirclePlus fill="black" className="w-6 h-6 text-white font-bold" />
             <span className="text-[14px] md:text-md md:font-semibold text-black mt-1">
-              What We Do
+              Our Process
             </span>
           </div>
 

@@ -92,7 +92,7 @@ export default function ClientTestimonialsSection() {
     <section className="pt-10 pb-8 px-4 bg-gradient-to-b from-gray-50 to-white">
       <div className="w-full lg:w-11/12 mx-auto">
         <h2 className="text-4xl font-bold text-gray-900 text-center mb-12 mt-10">
-          What Our Clients Say
+          What Our Clients Say.
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">

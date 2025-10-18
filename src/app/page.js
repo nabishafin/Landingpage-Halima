@@ -1,16 +1,16 @@
 "use client";
 import useLenis from "@/lib/useLenis";
 import HeroSection from "@/components/HeroSection";
-import AboutSection from "@/components/AboutSection";
-import ServicesSection from "@/components/ServicesSection";
+
 import { StepsSection } from "@/components/StepsSection";
 import { CompanyLogos } from "@/components/CompanyLogos";
 import { HowWeWorkSection } from "@/components/HowWeWorkSection";
 import { TestimonialSection } from "@/components/TestimonialSection";
-import { TeamSection } from "@/components/TeamSection";
+
 import { FaqSection } from "@/components/FaqSection";
 import ContactForm, { ContactSection } from "@/components/ContactSection";
 import ClientTestimonialsSection from "@/components/ClientReview";
+import TeamSection from "@/components/TeamSection";
 
 export default function Home() {
   useLenis();

@@ -43,7 +43,7 @@ export function CompanyLogos() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.3 }}
         >
-          The company <span className="block sm:inline-block">we keep</span>
+          The company <span className="block sm:inline-block">we keep.</span>
         </motion.h2>
 
         <div className="space-y-1">

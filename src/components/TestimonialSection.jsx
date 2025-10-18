@@ -52,6 +52,7 @@ export function TestimonialSection() {
         <div className="flex flex-col lg:flex-row gap-12 items-stretch justify-between">
           {/* For mobile: Quote comes first, then image */}
           <div className="lg:hidden flex flex-col gap-8">
+            zl
             {/* Quote - Mobile */}
             <motion.div
               className="w-full space-y-8"
@@ -71,7 +72,6 @@ export function TestimonialSection() {
                 </p>
               </div>
             </motion.div>
-
             {/* Image - Mobile */}
             <motion.div
               className="w-full relative group"

@@ -36,6 +36,14 @@ export function Footer() {
             >
               LinkedIn
             </a>
+            <a
+              href="https://www.linkedin.com" // put your real LinkedIn URL here
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-gray-300 transition-colors duration-200 font-medium"
+            >
+              Instagram
+            </a>
           </div>
         </div>
       </footer>

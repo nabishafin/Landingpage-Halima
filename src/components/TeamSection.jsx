@@ -3,12 +3,12 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-import team1 from "../../public/team-1.jpg";
+import team1 from "../../public/team-1.avif";
 import team2 from "../../public/team-2.jpg";
-import team3 from "../../public/team-3.jpg";
+import team3 from "../../public/team-3.avif";
 import team4 from "../../public/team-4.jpg";
 import team5 from "../../public/team-5.jpg";
-import team6 from "../../public/team-6.jpg";
+import team6 from "../../public/team-6.avif";
 
 const teamMembers = [
   {
@@ -61,7 +61,7 @@ const teamMembers = [
   },
 ];
 
-export function TeamSection() {
+const TeamSection = () => {
   const [hoveredMember, setHoveredMember] = useState(null);
 
   const fadeUp = {
@@ -140,8 +140,11 @@ export function TeamSection() {
               {teamMembers.map((member, index) => (
                 <motion.div
                   key={member.id}
-                  className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40
-                             h-[530px] sm:h-[420px] lg:h-[400px]"
+                  className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40"
+                  style={{
+                    height: "480px",
+                    maxHeight: "480px",
+                  }}
                   onMouseEnter={() => setHoveredMember(member.id)}
                   onMouseLeave={() => setHoveredMember(null)}
                   onTouchStart={() => setHoveredMember(member.id)}
@@ -149,36 +152,39 @@ export function TeamSection() {
                   custom={index}
                   variants={fadeUp}
                 >
-                  {/* ✅ Image adjustment */}
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    className={`object-cover transition-transform duration-500 ease-out ${
-                      hoveredMember === member.id
-                        ? "scale-110 blur-sm"
-                        : "group-hover:scale-110 group-hover:blur-sm"
-                    }`}
-                    style={{
-                      objectPosition: "center top 65%",
-                    }}
-                    priority={index < 2}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
+                  {/* ✅ Image positioned lower */}
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      className={`object-cover transition-transform duration-500 ease-out ${
+                        hoveredMember === member.id
+                          ? "scale-110 blur-sm"
+                          : "group-hover:scale-110 group-hover:blur-sm"
+                      }`}
+                      style={{
+                        objectPosition: "center top 75%", // Changed from 50% to 75% to show lower part of image
+                      }}
+                      priority={index < 2}
+                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                      quality={75}
+                    />
+                  </div>
 
                   {/* Role */}
-                  <div className="absolute top-4 left-4 right-4">
+                  <div className="absolute top-3 left-3 right-3">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-white rounded-full opacity-80" />
-                      <span className="text-white text-sm font-medium tracking-wide">
+                      <span className="text-white text-xs font-medium tracking-wide">
                         {member.role}
                       </span>
                     </div>
                   </div>
 
                   {/* Name */}
-                  <div className="absolute bottom-4 left-4 right-4 z-20">
-                    <h3 className="text-white text-xl md:text-2xl font-bold drop-shadow-lg">
+                  <div className="absolute bottom-3 left-3 right-3 z-20">
+                    <h3 className="text-white text-lg md:text-xl font-bold drop-shadow-lg">
                       {member.name}
                     </h3>
                   </div>
@@ -191,18 +197,18 @@ export function TeamSection() {
                         : "translate-y-full opacity-0"
                     }`}
                     style={{
-                      height: "45%",
+                      height: "40%",
                     }}
                   >
-                    <div className="absolute bottom-16 left-4 right-4 space-y-3 h-3/4 flex flex-col justify-end">
-                      <div className="flex items-center gap-2 mb-2">
+                    <div className="absolute bottom-12 left-3 right-3 space-y-2 h-3/4 flex flex-col justify-end">
+                      <div className="flex items-center gap-2 mb-1">
                         <div className="w-2 h-2 bg-white rounded-full opacity-80" />
-                        <span className="text-white text-sm font-medium tracking-wide">
+                        <span className="text-white text-xs font-medium tracking-wide">
                           {member.role}
                         </span>
                       </div>
                       <div className="overflow-hidden">
-                        <p className="text-white/90 text-xs sm:text-xs leading-tight">
+                        <p className="text-white/90 text-xs leading-tight line-clamp-4">
                           {member.description}
                         </p>
                       </div>
@@ -216,4 +222,6 @@ export function TeamSection() {
       </section>
     </div>
   );
-}
+};
+
+export default TeamSection;
