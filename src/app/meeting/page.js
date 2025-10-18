@@ -298,7 +298,7 @@ const MeetingPage = () => {
             Meeting Scheduled!
           </h2>
           <p className="text-gray-600 mb-6">
-            Your meeting has been successfully scheduled. You'll receive a
+            Your meeting has been successfully scheduled. You&apos;ll receive a
             confirmation email shortly.
           </p>
           <div className="space-y-3">
@@ -614,7 +614,7 @@ const MeetingPage = () => {
                         className="mt-0.5 text-gray-800 focus:ring-gray-500"
                       />
                       <span className="text-xs text-gray-700">
-                        Please confirm you've checked the time and timezone to
+                        Please confirm you&apos;ve checked the time and timezone to
                         avoid selecting a night-time slot by mistake (e.g., 3 AM
                         instead of 3 PM). *
                       </span>
@@ -623,7 +623,7 @@ const MeetingPage = () => {
 
                   <div>
                     <label className="block text-xs font-medium mb-1 text-gray-900">
-                      What's your phone number? *
+                      What&apos;s your phone number? *
                     </label>
                     <input
                       type="tel"
