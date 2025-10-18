@@ -12,31 +12,26 @@ import ClientTestimonialsSection from "@/components/ClientReview";
 import TeamSection from "@/components/TeamSection";
 
 export default function Home() {
-  const [showMain, setShowMain] = useState(false);
+  const [showVideo, setShowVideo] = useState(true);
   useLenis();
 
   const handleVideoEnd = () => {
-    setShowMain(true);
+    setShowVideo(false);
   };
 
-  // 🎥 ভিডিও চলাকালীন শুধুমাত্র ভিডিও দেখাবে
-  if (!showMain) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-black">
-        <video
-          src="logo video.mp4"
-          autoPlay
-          muted
-          onEnded={handleVideoEnd}
-          className="w-full h-full object-cover"
-        />
-      </div>
-    );
-  }
-
-  // 🌐 ভিডিও শেষ হলে পুরো landing page render হবে Navbar/Footer সহ
   return (
     <>
+      {showVideo && (
+        <div className="fixed inset-0 z-[10000] bg-black">
+          <video
+            src="logo video.mp4"
+            autoPlay
+            muted
+            onEnded={handleVideoEnd}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
       <main className="bg-[#F5F5F5]">
         <section id="hero">
           <HeroSection />
