@@ -208,7 +208,7 @@ const MeetingPage = () => {
     }
 
     if (!formData.timeConfirmed) {
-      setError("Please confirm you&apos;ve checked the time and timezone.");
+      setError("Please confirm you've checked the time and timezone.");
       return;
     }
 
@@ -226,8 +226,8 @@ const MeetingPage = () => {
       .trim()
       .split(/\s+/)
       .filter((word) => word.length > 0).length;
-    if (wordCount < 20) {
-      setError("Please provide at least 20 words about your brand.");
+    if (wordCount < 10) {
+      setError("Please provide at least 10 words about your brand.");
       return;
     }
 
@@ -303,7 +303,7 @@ const MeetingPage = () => {
             Meeting Scheduled!
           </h2>
           <p className="text-gray-600 mb-6">
-            Your meeting has been successfully scheduled. You&apos;ll receive a
+            Your meeting has been successfully scheduled. You'll receive a
             confirmation email shortly.
           </p>
           <div className="space-y-3">
@@ -419,9 +419,10 @@ const MeetingPage = () => {
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-8">
-                {/* Left: Calendar */}
-                <div>
+              {/* Mobile Layout: Calendar on top, Time slots below */}
+              <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8">
+                {/* Calendar Section */}
+                <div className="order-1 lg:order-1">
                   <div className="flex items-center justify-between mb-4">
                     <button
                       onClick={handlePrevMonth}
@@ -474,7 +475,7 @@ const MeetingPage = () => {
                     ))}
                   </div>
 
-                  {/* Timezone */}
+                  {/* Timezone - Moved to bottom on mobile */}
                   <div className="mt-6">
                     <label className="text-xs font-semibold mb-1 text-gray-900 flex items-center gap-1">
                       <svg
@@ -507,8 +508,9 @@ const MeetingPage = () => {
                     </select>
                   </div>
                 </div>
-                {/* Right: Time Slots */}
-                <div>
+
+                {/* Time Slots Section - Now appears below calendar on mobile */}
+                <div className="order-2 lg:order-2">
                   {selectedDate ? (
                     <div className="text-sm font-semibold text-gray-900 mb-4">
                       {formatSelectedDate()}
@@ -518,7 +520,7 @@ const MeetingPage = () => {
                       Select a date to see available times
                     </div>
                   )}
-                  <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+                  <div className="space-y-2 max-h-80 lg:max-h-96 overflow-y-auto pr-1">
                     {timeSlots.map((time) => (
                       <button
                         key={time}
@@ -613,16 +615,16 @@ const MeetingPage = () => {
                         className="mt-0.5 text-gray-800 focus:ring-gray-500"
                       />
                       <span className="text-xs text-gray-700">
-                        Please confirm you&apos;ve checked the time and timezone
-                        to avoid selecting a night-time slot by mistake (e.g., 3
-                        AM instead of 3 PM). *
+                        Please confirm you've checked the time and timezone to
+                        avoid selecting a night-time slot by mistake (e.g., 3 AM
+                        instead of 3 PM). *
                       </span>
                     </label>
                   </div>
 
                   <div>
                     <label className="block text-xs font-medium mb-1 text-gray-900">
-                      What&apos;s your phone number? *
+                      What's your phone number? *
                     </label>
                     <input
                       type="tel"
@@ -671,7 +673,7 @@ const MeetingPage = () => {
                   <div className="space-y-3">
                     <div>
                       <label className="block text-xs font-medium mb-1.5 text-gray-900">
-                        Tell us a little about your brand. (20 words minimum) *
+                        Tell us a little about your brand. (10 words minimum) *
                       </label>
                       <textarea
                         value={questionnaireData.brandDescription}
@@ -693,7 +695,7 @@ const MeetingPage = () => {
                             .split(/\s+/)
                             .filter((word) => word.length > 0).length
                         }{" "}
-                        words (minimum 20 required)
+                        words (minimum 10 required)
                       </p>
                     </div>
 
