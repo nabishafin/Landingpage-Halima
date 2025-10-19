@@ -39,7 +39,7 @@ export default function Home() {
         </section>
 
         <section>
-          <StepsSection />
+          <HowWeWorkSection />
         </section>
 
         <section>
@@ -51,9 +51,8 @@ export default function Home() {
         </section>
 
         <section>
-          <HowWeWorkSection />
+          <StepsSection />
         </section>
-
         <section id="reviews">
           <ClientTestimonialsSection />
         </section>

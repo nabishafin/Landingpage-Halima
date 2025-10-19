@@ -33,7 +33,7 @@ export function HowWeWorkSection() {
   ];
 
   return (
-    <section className="py-20 px-6 bg-black text-white mt-16 mx-2 rounded-2xl">
+    <section className="py-20 px-6 bg-white text-black mt-16 mx-2 rounded-2xl">
       <div className="w-full lg:w-11/12 mx-auto grid lg:grid-cols-2 gap-12 items-start">
         {/* LEFT CONTENT */}
         <motion.div
@@ -44,8 +44,8 @@ export function HowWeWorkSection() {
           className="space-y-4"
         >
           <div className="flex items-center justify-start gap-1 mb-5 md:mb-10">
-            <CirclePlus fill="white" className="w-6 h-6 text-black font-bold" />
-            <span className="text-[14px] md:text-md md:font-semibold text-white mt-1">
+            <CirclePlus fill="black" className="w-6 h-6 text-white font-bold" />
+            <span className="text-[14px] md:text-md md:font-semibold text-black mt-1">
               How We Work
             </span>
           </div>
@@ -54,7 +54,7 @@ export function HowWeWorkSection() {
             <span className="text-[#686868]">with you</span>
           </h2>
 
-          <p className="text-white text-[12px] md:text-[15px] leading-relaxed">
+          <p className="text-black text-[12px] md:text-[15px] leading-relaxed">
             Every brand has a different starting point. Some need clarity,
             others crave growth, and some are ready to scale with structure. At
             <span className="text-[12px] md:text-[15px]">
@@ -76,7 +76,7 @@ export function HowWeWorkSection() {
           {workSteps.map((step, index) => (
             <motion.div
               key={step.id}
-              className="bg-[#111] p-6 rounded-2xl relative overflow-hidden group border border-white/10 hover:border-white/20 transition-colors"
+              className="bg-[#F5F5F5] p-6 rounded-2xl relative overflow-hidden group border border-white/10 hover:border-white/20 transition-colors"
               initial={{ opacity: 0, y: 60 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
@@ -87,7 +87,7 @@ export function HowWeWorkSection() {
               viewport={{ once: true, amount: 0.3 }}
             >
               <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
-              <p className="text-white mb-2 text-sm leading-relaxed text-[11px] md:text-[14px]">
+              <p className="text-black mb-2 text-sm leading-relaxed text-[11px] md:text-[14px]">
                 {step.description}
               </p>
               <p className="text-gray-400 italic text-[12px] md:text-[15px] ">
@@ -106,7 +106,7 @@ export function HowWeWorkSection() {
           >
             <Button
               onClick={() => router.push("/meeting")}
-              className="bg-transparent border-[1px] border-white/50 w-40 text-white py-3 rounded-full font-semibold flex items-center gap-2  transition"
+              className="bg-black text-white hover:bg-black  border-[1px] border-black/50 w-40  py-3 rounded-full font-semibold flex items-center gap-2  transition"
             >
               Enquire
             </Button>

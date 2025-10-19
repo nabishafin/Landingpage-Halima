@@ -89,7 +89,7 @@ export default function ClientTestimonialsSection() {
   };
 
   return (
-    <section className="pt-10 pb-8 px-4 bg-gradient-to-b from-gray-50 to-white">
+    <section className="pt-10 pb-8 px-4 bg-gradient-to-b from-gray-50 to-white mt-16">
       <div className="w-full lg:w-11/12 mx-auto">
         <h2 className="text-4xl font-bold text-gray-900 text-center mb-12 mt-10">
           What Our Clients Say.
