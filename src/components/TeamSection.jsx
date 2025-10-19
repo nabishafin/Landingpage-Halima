@@ -123,7 +123,7 @@ const TeamSection = () => {
 
                 <a
                   href="mailto:people@thereinitiative.com?subject=&body="
-                  className="inline-block bg-black text-white hover:bg-gray-800 rounded-full px-8 py-3 text-base font-medium transition-colors"
+                  className="inline-block bg-black text-white hover:bg-black rounded-full px-8 py-3 text-base font-medium transition-colors"
                 >
                   Join us
                 </a>
