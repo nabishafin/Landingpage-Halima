@@ -1,5 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import {
   Calendar,
   Clock,
@@ -17,6 +19,7 @@ const MeetingPage = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [detectedCountry, setDetectedCountry] = useState("US"); // Default to US
 
   const [formData, setFormData] = useState({
     name: "",
@@ -49,7 +52,7 @@ const MeetingPage = () => {
     { label: "Australia/Sydney (GMT+10/+11)", value: "Australia/Sydney" },
   ];
 
-  const timeSlots = [
+  const allTimeSlots = [
     "9:00 AM",
     "9:30 AM",
     "10:00 AM",
@@ -68,6 +71,43 @@ const MeetingPage = () => {
     "4:30 PM",
     "5:00 PM",
   ];
+
+  const [timeSlots, setTimeSlots] = useState(allTimeSlots);
+
+  useEffect(() => {
+    if (selectedDate) {
+      const now = new Date();
+      const isToday = selectedDate.toDateString() === now.toDateString();
+
+      if (isToday) {
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+
+        const filteredSlots = allTimeSlots.filter((time) => {
+          const [timePart, period] = time.split(" ");
+          let [hour, minute] = timePart.split(":").map(Number);
+
+          if (period === "PM" && hour !== 12) {
+            hour += 12;
+          }
+          if (period === "AM" && hour === 12) {
+            hour = 0;
+          }
+
+          if (hour > currentHour) {
+            return true;
+          }
+          if (hour === currentHour && minute >= currentMinute) {
+            return true;
+          }
+          return false;
+        });
+        setTimeSlots(filteredSlots);
+      } else {
+        setTimeSlots(allTimeSlots);
+      }
+    }
+  }, [selectedDate]);
 
   const priorityOptions = [
     "Establishing clarity and brand identity",
@@ -532,24 +572,36 @@ const MeetingPage = () => {
                       </div>
                     )}
                     <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
-                      {timeSlots.map((time) => (
-                        <button
-                          key={time}
-                          onClick={() => handleTimeSelect(time)}
-                          disabled={!selectedDate}
-                          className={`w-full text-center px-3 py-2 border rounded-lg text-sm font-medium transition-colors
+                      {timeSlots.map((time) =>
+                        selectedTime === time ? (
+                          <div key={time} className="flex gap-2">
+                            <div className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-gray-200 text-gray-800">
+                              {time}
+                            </div>
+                            <button
+                              onClick={handleNextPage}
+                              className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-black text-white"
+                            >
+                              Next
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            key={time}
+                            onClick={() => handleTimeSelect(time)}
+                            disabled={!selectedDate}
+                            className={`w-full text-center px-3 py-2 border rounded-lg text-sm font-medium transition-colors
                             ${
                               !selectedDate
                                 ? "text-gray-400 cursor-not-allowed bg-gray-50 border-gray-200"
-                                : selectedTime === time
-                                ? "bg-black text-white border-black"
                                 : "border-blue-200 bg-white text-gray-900 hover:bg-gray-50 hover:border-gray-400"
                             }
                           `}
-                        >
-                          {time}
-                        </button>
-                      ))}
+                          >
+                            {time}
+                          </button>
+                        )
+                      )}
                     </div>
                   </div>
 
@@ -565,18 +617,7 @@ const MeetingPage = () => {
                 </div>
               </div>
 
-              {/* Next Button */}
-              <button
-                onClick={handleNextPage}
-                disabled={!selectedDate || !selectedTime}
-                className={`w-full mt-8 py-2.5 rounded-lg font-semibold transition-colors text-sm ${
-                  selectedDate && selectedTime
-                    ? "bg-gray-800 text-white hover:bg-gray-900"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-              >
-                Next
-              </button>
+
 
               {showTimePicker && (
                 <div className="fixed inset-0 bg-white z-50 p-4 flex flex-col lg:hidden">
@@ -596,24 +637,35 @@ const MeetingPage = () => {
 
                   {/* Time slots */}
                   <div className="flex-1 overflow-y-auto space-y-2 pr-1">
-                    {timeSlots.map((time) => (
-                      <button
-                        key={time}
-                        onClick={() => {
-                          handleTimeSelect(time);
-                          setShowTimePicker(false);
-                        }}
-                        className={`w-full text-center px-3 py-4 border rounded-lg text-sm font-medium transition-colors
+                    {timeSlots.map((time) =>
+                      selectedTime === time ? (
+                        <div key={time} className="flex gap-2">
+                          <div className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-gray-200 text-gray-800">
+                            {time}
+                          </div>
+                          <button
+                            onClick={handleNextPage}
+                            className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-black text-white"
+                          >
+                            Next
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          key={time}
+                          onClick={() => {
+                            handleTimeSelect(time);
+                          }}
+                          className={`w-full text-center px-3 py-4 border rounded-lg text-sm font-medium transition-colors
                         ${
-                          selectedTime === time
-                            ? "bg-black text-white border-black shadow-sm"
-                            : "border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:border-gray-400 hover:shadow-sm"
+                          "border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:border-gray-400 hover:shadow-sm"
                         }
                     `}
-                      >
-                        {time}
-                      </button>
-                    ))}
+                        >
+                          {time}
+                        </button>
+                      )
+                    )}
                   </div>
                 </div>
               )}
@@ -711,12 +763,13 @@ const MeetingPage = () => {
                     <label className="block text-xs font-medium mb-1 text-gray-900">
                       What&apos;s your phone number? *
                     </label>
-                    <input
-                      type="tel"
-                      name="phoneNumber"
+                    <PhoneInput
+                      international
+                      defaultCountry="US"
                       value={formData.phoneNumber}
-                      onChange={handleInputChange}
-                      required
+                      onChange={(value) =>
+                        setFormData({ ...formData, phoneNumber: value })
+                      }
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     />
                   </div>

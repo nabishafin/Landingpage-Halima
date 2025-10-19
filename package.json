@@ -25,6 +25,7 @@
     "react-day-picker": "^9.11.0",
     "react-dom": "19.1.0",
     "react-intersection-observer": "^9.16.0",
+    "react-phone-number-input": "^3.4.12",
     "react-scroll": "^1.9.3",
     "tailwind-merge": "^3.3.1"
   },
