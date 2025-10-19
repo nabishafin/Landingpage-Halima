@@ -142,7 +142,7 @@ const TeamSection = () => {
                 return (
                   <motion.div
                     key={member.id}
-                    className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40 h-[450px] sm:h-[500px] md:h-[480px]"
+                    className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40  h-[480px] md:h-[450px] "
                     onMouseEnter={() => setHoveredMember(member.id)}
                     onMouseLeave={() => setHoveredMember(null)}
                     onTouchStart={() => setHoveredMember(member.id)}
@@ -155,7 +155,7 @@ const TeamSection = () => {
                       src={member.image}
                       alt={member.name}
                       fill
-                      className={`object-cover object-top transition-transform duration-500 ${
+                      className={`object-cover transition-transform duration-500 ${
                         isActive ? "scale-110 blur-sm" : ""
                       }`}
                       quality={80}
