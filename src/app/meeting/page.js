@@ -16,6 +16,7 @@ const MeetingPage = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -168,6 +169,9 @@ const MeetingPage = () => {
       );
       setSelectedDate(selected);
       setSelectedTime(null);
+      if (window.innerWidth < 1024) {
+        setShowTimePicker(true);
+      }
     }
   };
 
@@ -549,38 +553,9 @@ const MeetingPage = () => {
                     </div>
                   </div>
 
-                  {/* Mobile View - Only show time slots when date is selected */}
+                  {/* Mobile View - Placeholder */}
                   <div className="lg:hidden">
-                    {selectedDate ? (
-                      <>
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="text-sm font-semibold text-gray-900">
-                            {formatSelectedDate()}
-                          </div>
-                          <div className="flex items-center gap-1 text-xs text-gray-500 bg-blue-50 px-2 py-1 rounded">
-                            <Clock className="w-3 h-3" />
-                            <span>Available Times</span>
-                          </div>
-                        </div>
-                        <div className="space-y-2 max-h-80 overflow-y-auto pr-1 border border-gray-200 rounded-lg p-3 bg-gray-50">
-                          {timeSlots.map((time) => (
-                            <button
-                              key={time}
-                              onClick={() => handleTimeSelect(time)}
-                              className={`w-full text-center px-3 py-3 border rounded-lg text-sm font-medium transition-colors
-                                ${
-                                  selectedTime === time
-                                    ? "bg-black text-white border-black shadow-sm"
-                                    : "border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:border-gray-400 hover:shadow-sm"
-                                }
-                              `}
-                            >
-                              {time}
-                            </button>
-                          ))}
-                        </div>
-                      </>
-                    ) : (
+                    {!selectedDate && (
                       <div className="text-center py-8 text-gray-400 text-sm border border-dashed border-gray-300 rounded-lg">
                         <Calendar className="w-8 h-8 mx-auto mb-2 opacity-50" />
                         Select a date to view available time slots
@@ -602,6 +577,46 @@ const MeetingPage = () => {
               >
                 Next
               </button>
+
+              {showTimePicker && (
+                <div className="fixed inset-0 bg-white z-50 p-4 flex flex-col lg:hidden">
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <button
+                      onClick={() => setShowTimePicker(false)}
+                      className="flex items-center gap-1 text-gray-600"
+                    >
+                      <ChevronLeft className="w-4 h-4" /> Back
+                    </button>
+                    <div className="text-sm font-semibold text-gray-900">
+                      {formatSelectedDate()}
+                    </div>
+                    <div className="w-12"></div> {/* Spacer */}
+                  </div>
+
+                  {/* Time slots */}
+                  <div className="flex-1 overflow-y-auto space-y-2 pr-1">
+                    {timeSlots.map((time) => (
+                      <button
+                        key={time}
+                        onClick={() => {
+                          handleTimeSelect(time);
+                          setShowTimePicker(false);
+                        }}
+                        className={`w-full text-center px-3 py-4 border rounded-lg text-sm font-medium transition-colors
+                        ${
+                          selectedTime === time
+                            ? "bg-black text-white border-black shadow-sm"
+                            : "border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:border-gray-400 hover:shadow-sm"
+                        }
+                    `}
+                      >
+                        {time}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </>
           )}
 
