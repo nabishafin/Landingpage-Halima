@@ -29,7 +29,7 @@ export function Footer() {
             </button>
 
             <a
-              href="https://www.linkedin.com" // put your real LinkedIn URL here
+              href="https://www.linkedin.com/company/the-reinitiative" // put your real LinkedIn URL here
               target="_blank"
               rel="noopener noreferrer"
               className="text-white hover:text-gray-300 transition-colors duration-200 font-medium"
