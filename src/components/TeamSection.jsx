@@ -66,7 +66,7 @@ const TeamSection = () => {
 
   const fadeUp = {
     hidden: { opacity: 0, y: 50 },
-    visible: (i = 0) => ({
+    visible: (i) => ({
       opacity: 1,
       y: 0,
       transition: { duration: 0.8, delay: i * 0.15, ease: "easeOut" },
@@ -74,8 +74,8 @@ const TeamSection = () => {
   };
 
   return (
-    <div className="data-scroll-section">
-      <section className="py-0 md:py-16">
+    <div className="data-scroll-section w-full">
+      <section className="py-0 md:py-16 w-full">
         <div className="w-full lg:w-11/12 mx-auto bg-white p-4 md:p-16 rounded-2xl">
           <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-start md:items-center">
             {/* Left Content */}
@@ -143,7 +143,7 @@ const TeamSection = () => {
                   className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40"
                   style={{
                     height: "480px",
-                    maxHeight: "480px",
+                    minHeight: "480px",
                   }}
                   onMouseEnter={() => setHoveredMember(member.id)}
                   onMouseLeave={() => setHoveredMember(null)}
@@ -152,66 +152,67 @@ const TeamSection = () => {
                   custom={index}
                   variants={fadeUp}
                 >
-                  {/* ✅ Image positioned lower */}
-                  <div className="relative w-full h-full">
+                  {/* Image Container */}
+                  <div className="absolute inset-0 w-full h-full">
                     <Image
                       src={member.image}
                       alt={member.name}
                       fill
                       className={`object-cover transition-transform duration-500 ease-out ${
-                        hoveredMember === member.id
-                          ? "scale-110 blur-sm"
-                          : "group-hover:scale-110 group-hover:blur-sm"
+                        hoveredMember === member.id ? "scale-110 blur-sm" : ""
                       }`}
                       style={{
-                        objectPosition: "center top 75%", // Changed from 50% to 75% to show lower part of image
+                        objectPosition: "center 75%",
                       }}
                       priority={index < 2}
-                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       quality={75}
+                      placeholder="blur"
+                      unoptimized={false}
                     />
                   </div>
 
-                  {/* Role */}
-                  <div className="absolute top-3 left-3 right-3">
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
+
+                  {/* Role Badge - Top */}
+                  <div className="absolute top-3 left-3 right-3 z-10">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-white rounded-full opacity-80" />
+                      <div className="w-2 h-2 bg-white rounded-full opacity-80 flex-shrink-0" />
                       <span className="text-white text-xs font-medium tracking-wide">
                         {member.role}
                       </span>
                     </div>
                   </div>
 
-                  {/* Name */}
+                  {/* Name - Bottom */}
                   <div className="absolute bottom-3 left-3 right-3 z-20">
                     <h3 className="text-white text-lg md:text-xl font-bold drop-shadow-lg">
                       {member.name}
                     </h3>
                   </div>
 
-                  {/* Description */}
+                  {/* Description Overlay */}
                   <div
-                    className={`absolute inset-x-0 bottom-0 transition-all duration-500 ease-out transform ${
+                    className={`absolute inset-x-0 bottom-0 z-30  transition-all duration-500 ease-out ${
                       hoveredMember === member.id
                         ? "translate-y-0 opacity-100"
                         : "translate-y-full opacity-0"
                     }`}
                     style={{
-                      height: "40%",
+                      height: "45%",
                     }}
                   >
-                    <div className="absolute bottom-12 left-3 right-3 space-y-2 h-3/4 flex flex-col justify-end">
-                      <div className="flex items-center gap-2 mb-1">
-                        <div className="w-2 h-2 bg-white rounded-full opacity-80" />
+                    <div className="absolute bottom-0 left-3 right-3 pb-12 pt-4 space-y-2">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-2 h-2 bg-white rounded-full opacity-80 flex-shrink-0" />
                         <span className="text-white text-xs font-medium tracking-wide">
                           {member.role}
                         </span>
                       </div>
-                      <div className="overflow-hidden">
-                        <p className="text-white/90 text-xs leading-tight line-clamp-4">
-                          {member.description}
-                        </p>
-                      </div>
+                      <p className="text-white/95 text-xs md:text-sm leading-relaxed line-clamp-5">
+                        {member.description}
+                      </p>
                     </div>
                   </div>
                 </motion.div>
