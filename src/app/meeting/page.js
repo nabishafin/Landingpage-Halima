@@ -34,11 +34,19 @@ const MeetingPage = () => {
     budgetAllocated: "",
   });
 
-  // শুধুমাত্র London timezone
+  // Multiple timezone options
   const [timezoneInfo, setTimezoneInfo] = useState({ name: "Europe/London" });
 
-  // শুধুমাত্র London timezone option
-  const timezones = [{ label: "Europe/London", value: "Europe/London" }];
+  const timezones = [
+    { label: "Europe/London (GMT+0/+1)", value: "Europe/London" },
+    { label: "America/New_York (GMT-5/-4)", value: "America/New_York" },
+    { label: "America/Los_Angeles (GMT-8/-7)", value: "America/Los_Angeles" },
+    { label: "Europe/Paris (GMT+1/+2)", value: "Europe/Paris" },
+    { label: "Asia/Dubai (GMT+4)", value: "Asia/Dubai" },
+    { label: "Asia/Singapore (GMT+8)", value: "Asia/Singapore" },
+    { label: "Asia/Tokyo (GMT+9)", value: "Asia/Tokyo" },
+    { label: "Australia/Sydney (GMT+10/+11)", value: "Australia/Sydney" },
+  ];
 
   const timeSlots = [
     "9:00 AM",
@@ -216,7 +224,7 @@ const MeetingPage = () => {
       return;
     }
 
-    // Validate questionnaire - UPDATED TO 20 WORDS
+    // Validate questionnaire
     const wordCount = questionnaireData.brandDescription
       .trim()
       .split(/\s+/)
@@ -414,7 +422,6 @@ const MeetingPage = () => {
                 </div>
               )}
 
-              {/* Mobile Layout: Calendar on top, Time slots below */}
               <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8">
                 {/* Calendar Section */}
                 <div className="order-1 lg:order-1">
@@ -470,7 +477,7 @@ const MeetingPage = () => {
                     ))}
                   </div>
 
-                  {/* Timezone - শুধুমাত্র London timezone দেখাবে এবং disabled থাকবে */}
+                  {/* Timezone - Multiple timezone options */}
                   <div className="mt-6">
                     <label className="text-xs font-semibold mb-1 text-gray-900 flex items-center gap-1">
                       <svg
@@ -493,8 +500,7 @@ const MeetingPage = () => {
                       onChange={(e) =>
                         setTimezoneInfo({ name: e.target.value })
                       }
-                      disabled
-                      className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs bg-gray-100 text-gray-600 cursor-not-allowed"
+                      className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     >
                       {timezones.map((tz) => (
                         <option key={tz.value} value={tz.value}>
@@ -503,41 +509,83 @@ const MeetingPage = () => {
                       ))}
                     </select>
                     <p className="text-xs text-gray-500 mt-1">
-                      All times are shown in London timezone
+                      All times are shown in your selected timezone
                     </p>
                   </div>
                 </div>
 
-                {/* Time Slots Section - Now appears below calendar on mobile */}
+                {/* Time Slots Section */}
                 <div className="order-2 lg:order-2">
-                  {selectedDate ? (
-                    <div className="text-sm font-semibold text-gray-900 mb-4">
-                      {formatSelectedDate()}
+                  {/* Desktop View - Always show time slots */}
+                  <div className="hidden lg:block">
+                    {selectedDate ? (
+                      <div className="text-sm font-semibold text-gray-900 mb-4">
+                        {formatSelectedDate()}
+                      </div>
+                    ) : (
+                      <div className="text-sm text-gray-500 mb-4">
+                        Select a date to see available times
+                      </div>
+                    )}
+                    <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+                      {timeSlots.map((time) => (
+                        <button
+                          key={time}
+                          onClick={() => handleTimeSelect(time)}
+                          disabled={!selectedDate}
+                          className={`w-full text-center px-3 py-2 border rounded-lg text-sm font-medium transition-colors
+                            ${
+                              !selectedDate
+                                ? "text-gray-400 cursor-not-allowed bg-gray-50 border-gray-200"
+                                : selectedTime === time
+                                ? "bg-black text-white border-black"
+                                : "border-blue-200 bg-white text-gray-900 hover:bg-gray-50 hover:border-gray-400"
+                            }
+                          `}
+                        >
+                          {time}
+                        </button>
+                      ))}
                     </div>
-                  ) : (
-                    <div className="text-sm text-gray-500 mb-4">
-                      Select a date to see available times
-                    </div>
-                  )}
-                  <div className="space-y-2 max-h-80 lg:max-h-96 overflow-y-auto pr-1">
-                    {timeSlots.map((time) => (
-                      <button
-                        key={time}
-                        onClick={() => handleTimeSelect(time)}
-                        disabled={!selectedDate}
-                        className={`w-full text-center px-3 py-2 border rounded-lg text-sm font-medium transition-colors
-                          ${
-                            !selectedDate
-                              ? "text-gray-400 cursor-not-allowed bg-gray-50 border-gray-200"
-                              : selectedTime === time
-                              ? "bg-black text-white border-black"
-                              : "border-blue-200 bg-white text-gray-900 hover:bg-gray-50 hover:border-gray-400"
-                          }
-                        `}
-                      >
-                        {time}
-                      </button>
-                    ))}
+                  </div>
+
+                  {/* Mobile View - Only show time slots when date is selected */}
+                  <div className="lg:hidden">
+                    {selectedDate ? (
+                      <>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="text-sm font-semibold text-gray-900">
+                            {formatSelectedDate()}
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-gray-500 bg-blue-50 px-2 py-1 rounded">
+                            <Clock className="w-3 h-3" />
+                            <span>Available Times</span>
+                          </div>
+                        </div>
+                        <div className="space-y-2 max-h-80 overflow-y-auto pr-1 border border-gray-200 rounded-lg p-3 bg-gray-50">
+                          {timeSlots.map((time) => (
+                            <button
+                              key={time}
+                              onClick={() => handleTimeSelect(time)}
+                              className={`w-full text-center px-3 py-3 border rounded-lg text-sm font-medium transition-colors
+                                ${
+                                  selectedTime === time
+                                    ? "bg-black text-white border-black shadow-sm"
+                                    : "border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:border-gray-400 hover:shadow-sm"
+                                }
+                              `}
+                            >
+                              {time}
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-center py-8 text-gray-400 text-sm border border-dashed border-gray-300 rounded-lg">
+                        <Calendar className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        Select a date to view available time slots
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -545,7 +593,12 @@ const MeetingPage = () => {
               {/* Next Button */}
               <button
                 onClick={handleNextPage}
-                className="w-full mt-8 bg-gray-800 text-white py-2.5 rounded-lg hover:bg-gray-900 font-semibold transition-colors text-sm"
+                disabled={!selectedDate || !selectedTime}
+                className={`w-full mt-8 py-2.5 rounded-lg font-semibold transition-colors text-sm ${
+                  selectedDate && selectedTime
+                    ? "bg-gray-800 text-white hover:bg-gray-900"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
               >
                 Next
               </button>
@@ -574,6 +627,24 @@ const MeetingPage = () => {
               )}
 
               <div className="space-y-5 max-w-2xl">
+                {/* Selected Time Display for Mobile */}
+                <div className="lg:hidden bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">
+                        Scheduled for:
+                      </p>
+                      <p className="text-sm font-bold text-blue-900">
+                        {formatSelectedDate()} at {selectedTime}
+                      </p>
+                      <p className="text-xs text-blue-600">
+                        {timezoneInfo.name}
+                      </p>
+                    </div>
+                    <Calendar className="w-5 h-5 text-blue-600" />
+                  </div>
+                </div>
+
                 {/* Basic Info */}
                 <div className="space-y-3">
                   <div>
@@ -586,7 +657,7 @@ const MeetingPage = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     />
                   </div>
 
@@ -600,7 +671,7 @@ const MeetingPage = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     />
                   </div>
 
@@ -614,9 +685,9 @@ const MeetingPage = () => {
                         className="mt-0.5 text-gray-800 focus:ring-gray-500"
                       />
                       <span className="text-xs text-gray-700">
-                        Please confirm you&apos;ve checked the time and timezone to
-                        avoid selecting a night-time slot by mistake (e.g., 3 AM
-                        instead of 3 PM). *
+                        Please confirm you&apos;ve checked the time and timezone
+                        to avoid selecting a night-time slot by mistake (e.g., 3
+                        AM instead of 3 PM). *
                       </span>
                     </label>
                   </div>
@@ -631,7 +702,7 @@ const MeetingPage = () => {
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
                       required
-                      className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     />
                   </div>
 
@@ -645,7 +716,7 @@ const MeetingPage = () => {
                       value={formData.websiteURL}
                       onChange={handleInputChange}
                       required
-                      className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     />
                   </div>
 
@@ -659,7 +730,7 @@ const MeetingPage = () => {
                       onChange={handleInputChange}
                       required
                       rows={2}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                     />
                   </div>
                 </div>
@@ -684,7 +755,7 @@ const MeetingPage = () => {
                         }
                         required
                         rows={3}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                         placeholder="Describe your brand, products/services, target audience, and what makes you unique..."
                       />
                       <p className="text-xs text-gray-500 mt-0.5">
