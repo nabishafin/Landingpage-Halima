@@ -37,7 +37,7 @@ export function Footer() {
               LinkedIn
             </a>
             <a
-              href="https://www.linkedin.com" // put your real LinkedIn URL here
+              href="https://www.instagram.com/thereinitiative?igsh=MTVzZ2E2b3p4anRwMA%3D%3D&utm_source=qr" // updated Instagram link
               target="_blank"
               rel="noopener noreferrer"
               className="text-white hover:text-gray-300 transition-colors duration-200 font-medium"
