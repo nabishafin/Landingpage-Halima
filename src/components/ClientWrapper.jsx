@@ -16,7 +16,7 @@ export default function ClientWrapper({ children }) {
             {!hideNavFooter && <Navbar />}
             {children}
             {!hideNavFooter && <Footer />}
-            <ConnectButton />
+            {!hideNavFooter && <ConnectButton />}
         </>
     );
 }

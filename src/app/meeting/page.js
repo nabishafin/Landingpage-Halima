@@ -605,15 +605,7 @@ const MeetingPage = () => {
                     </div>
                   </div>
 
-                  {/* Mobile View - Placeholder */}
-                  <div className="lg:hidden">
-                    {!selectedDate && (
-                      <div className="text-center py-8 text-gray-400 text-sm border border-dashed border-gray-300 rounded-lg">
-                        <Calendar className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                        Select a date to view available time slots
-                      </div>
-                    )}
-                  </div>
+
                 </div>
               </div>
 
