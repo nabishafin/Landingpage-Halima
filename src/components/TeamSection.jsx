@@ -132,7 +132,7 @@ const TeamSection = () => {
 
             {/* Right Team Grid */}
             <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 mt-8 md:mt-12"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 md:gap-4 mt-8 md:mt-12"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
@@ -142,7 +142,7 @@ const TeamSection = () => {
                 return (
                   <motion.div
                     key={member.id}
-                    className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40 h-full aspect-square "
+                    className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40  h-[350px] md:h-[450px] "
                     onMouseEnter={() => setHoveredMember(member.id)}
                     onMouseLeave={() => setHoveredMember(null)}
                     onTouchStart={() => setHoveredMember(member.id)}

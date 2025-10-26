@@ -79,14 +79,13 @@ export function TestimonialSection() {
               transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
               viewport={{ once: true, amount: 0.3 }}
             >
-              <div className="relative overflow-hidden rounded-3xl h-full aspect-square">
+              <div className="relative overflow-hidden rounded-3xl h-[520px] md:h-80">
                 <Image
                   src={pic}
                   alt="Bozoma St John"
                   fill
                   className="object-cover object-[center_top] transition-transform duration-500 ease-out group-hover:scale-110 group-hover:blur-sm"
                 />
-                {/* Overlay text */}
                 <div className="absolute bottom-0 left-0 w-full p-4 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                   <p className="text-white text-sm md:text-sm font-semibold text-center">
                     Meet Bozoma St John – A Hall of Fame marketer with global
