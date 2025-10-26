@@ -132,7 +132,7 @@ const TeamSection = () => {
 
             {/* Right Team Grid */}
             <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 md:gap-4 mt-8 md:mt-12"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 mt-8 md:mt-12"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
@@ -142,7 +142,7 @@ const TeamSection = () => {
                 return (
                   <motion.div
                     key={member.id}
-                    className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40  h-[350px] md:h-[450px] "
+                    className="relative group cursor-pointer overflow-hidden rounded-2xl  transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40  h-[350px] md:h-[450px] "
                     onMouseEnter={() => setHoveredMember(member.id)}
                     onMouseLeave={() => setHoveredMember(null)}
                     onTouchStart={() => setHoveredMember(member.id)}
@@ -151,17 +151,21 @@ const TeamSection = () => {
                     variants={fadeUp}
                   >
                     {/* Image */}
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      fill
-                      className={`object-cover transition-transform duration-500 
-    ${isActive ? "scale-110 blur-sm" : ""} 
-    object-[20%_20%] sm:object-center`}
-                      quality={80}
-                      placeholder="blur"
-                      priority={index < 3}
-                    />
+                    <div className="relative overflow-hidden rounded-3xl h-full">
+                      <Image
+                        src={member.image}
+                        alt="Bozoma St John"
+                        fill
+                        className="object-cover object-[center_top] transition-transform duration-500 ease-out group-hover:scale-110 group-hover:blur-sm"
+                      />
+                      {/* Overlay text */}
+                      <div className="absolute bottom-0 left-0 w-full p-4 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <p className="text-white text-sm md:text-sm font-semibold text-center">
+                          Meet Bozoma St John – A Hall of Fame marketer with
+                          global impact.
+                        </p>
+                      </div>
+                    </div>
 
                     {/* Role Badge - Top */}
                     <div className="absolute top-3 left-3 right-3 z-20">

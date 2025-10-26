@@ -52,7 +52,7 @@ export function StepsSection() {
           </div>
 
           {/* Main heading */}
-          <motion.h1
+          {/* <motion.h1
             className="text-3xl sm:text-4xl md:text-3xl lg:text-6xl font-[500] text-balance leading-tight mt-8 md:mt-0"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -64,6 +64,19 @@ export function StepsSection() {
             <span className="text-[#686868]">
               We make it resonate with precision.
             </span>
+          </motion.h1> */}
+          <motion.h1
+            className="text-3xl sm:text-4xl md:text-3xl lg:text-6xl font-[500] text-balance leading-tight mt-8 md:mt-0"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <span className="text-black">We’re human.</span>
+            <br />
+            <span className="text-[#686868] md:text-4xl">
+              We don’t rush. We think. We build. We refine.
+            </span>
           </motion.h1>
         </div>
       </section>
@@ -73,7 +86,7 @@ export function StepsSection() {
           {" "}
           {/* Changed text-left to text-center here */}
           {/* Main heading */}
-          <motion.h1
+          {/* <motion.h1
             className="text-lg sm:text-xl md:text-xl mb-5 md:mt-10"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -84,6 +97,20 @@ export function StepsSection() {
               Our services are delivered through five strategic pillars. <br />
               These are the ways we partner with you to build, grow, and sustain
               your brand.
+            </span>
+          </motion.h1> */}
+          <motion.h1
+            className="text-lg sm:text-xl md:text-xl mb-5 md:mt-0  md:px-60 px-0"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <span className="text-black text-[15px] md:text-lg">
+              Every brand we work with deserves clarity, and clarity is a
+              process built with care and intention. Our services are delivered
+              through five strategic pillars, the ways we partner with you to
+              build, grow, and sustain your brand.
             </span>
           </motion.h1>
         </div>

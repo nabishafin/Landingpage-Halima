@@ -46,23 +46,22 @@ export function HowWeWorkSection() {
           <div className="flex items-center justify-start gap-1 mb-5 md:mb-10">
             <CirclePlus fill="black" className="w-6 h-6 text-white font-bold" />
             <span className="text-[14px] md:text-md md:font-semibold text-black mt-1">
-              How We Work
+              What we do
             </span>
           </div>
           <h2 className="text-3xl lg:text-4xl font-bold leading-snug">
-            How We Work <br />
-            <span className="text-[#686868]">with you</span>
+            We meet you where you are <br />
+            <span className="text-[#686868] mt-1">
+              and build the systems that move you forward.
+            </span>
           </h2>
 
           <p className="text-black text-[12px] md:text-[15px] leading-relaxed">
-            Every brand has a different starting point. Some need clarity,
-            others crave growth, and some are ready to scale with structure. At
-            <span className="text-[12px] md:text-[15px]">
-              {" "}
-              The Re:Initiative
-            </span>
-            , we meet you where you are, guiding you through our proven service
-            framework.
+            We power the growth engines of{" "}
+            <span className="font-semibold">creative brands</span> ready to
+            scale globally and sustainably, designing the systems that give
+            creative businesses the structure to grow intelligently and
+            sustainably.
           </p>
 
           <p className="text-[12px] md:text-[15px]">
