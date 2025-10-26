@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
 import { motion } from "framer-motion";
 
 import team1 from "../../public/team-1.avif";
@@ -62,8 +61,6 @@ const teamMembers = [
 ];
 
 const TeamSection = () => {
-  const [hoveredMember, setHoveredMember] = useState(null);
-
   const fadeUp = {
     hidden: { opacity: 0, y: 50 },
     visible: (i) => ({
@@ -131,83 +128,24 @@ const TeamSection = () => {
             </motion.div>
 
             {/* Right Team Grid */}
-            <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 mt-8 md:mt-12"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-            >
-              {teamMembers.map((member, index) => {
-                const isActive = hoveredMember === member.id;
-                return (
-                  <motion.div
-                    key={member.id}
-                    className="relative group cursor-pointer overflow-hidden rounded-2xl  transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40  h-[350px] md:h-[450px] "
-                    onMouseEnter={() => setHoveredMember(member.id)}
-                    onMouseLeave={() => setHoveredMember(null)}
-                    onTouchStart={() => setHoveredMember(member.id)}
-                    onTouchEnd={() => setHoveredMember(null)}
-                    custom={index}
-                    variants={fadeUp}
-                  >
-                    {/* Image */}
-                    <div className="relative overflow-hidden rounded-3xl h-full">
-                      <Image
-                        src={member.image}
-                        alt="Bozoma St John"
-                        fill
-                        className="object-cover object-[center_top] transition-transform duration-500 ease-out group-hover:scale-110 group-hover:blur-sm"
-                      />
-                      {/* Overlay text */}
-                      <div className="absolute bottom-0 left-0 w-full p-4 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <p className="text-white text-sm md:text-sm font-semibold text-center">
-                          Meet Bozoma St John – A Hall of Fame marketer with
-                          global impact.
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Role Badge - Top */}
-                    <div className="absolute top-3 left-3 right-3 z-20">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-white rounded-full opacity-80 shrink-0" />
-                        <span className="text-white text-xs font-medium tracking-wide">
-                          {member.role}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Name - Bottom */}
-                    <div className="absolute bottom-3 left-3 right-3 z-20">
-                      <h3 className="text-white text-lg md:text-xl font-bold drop-shadow-lg">
-                        {member.name}
-                      </h3>
-                    </div>
-
-                    {/* Description Overlay */}
-                    <div
-                      className={`absolute inset-x-0 bottom-0 z-30 h-[45%] transition-all duration-500 ease-out ${
-                        isActive
-                          ? "translate-y-0 opacity-100"
-                          : "translate-y-full opacity-0"
-                      }`}
-                    >
-                      <div className="absolute bottom-0 left-3 right-3 pb-12 pt-4 space-y-2">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="w-2 h-2 bg-white rounded-full opacity-80 shrink-0" />
-                          <span className="text-white text-xs font-medium tracking-wide">
-                            {member.role}
-                          </span>
-                        </div>
-                        <p className="text-white/95 text-xs md:text-sm leading-relaxed line-clamp-5">
-                          {member.description}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 md:mt-12">
+              {teamMembers.map((member) => (
+                <div key={member.id} className="relative group cursor-pointer">
+                  <div className="relative w-full h-[520px] rounded-2xl overflow-hidden">
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-lg font-bold">{member.name}</h3>
+                    <p className="text-sm">{member.role}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
