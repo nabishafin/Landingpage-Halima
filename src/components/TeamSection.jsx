@@ -142,7 +142,7 @@ const TeamSection = () => {
                 return (
                   <motion.div
                     key={member.id}
-                    className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40  h-[350px] md:h-[450px] "
+                    className="relative group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/40 h-[550px] sm:h-[450px] md:h-[480px] lg:h-[500px]"
                     onMouseEnter={() => setHoveredMember(member.id)}
                     onMouseLeave={() => setHoveredMember(null)}
                     onTouchStart={() => setHoveredMember(member.id)}
@@ -157,7 +157,7 @@ const TeamSection = () => {
                       fill
                       className={`object-cover transition-transform duration-500 
     ${isActive ? "scale-110 blur-sm" : ""} 
-    object-[20%_20%] sm:object-center`}
+    object-[center_20%] sm:object-center`}
                       quality={80}
                       placeholder="blur"
                       priority={index < 3}
@@ -182,7 +182,7 @@ const TeamSection = () => {
 
                     {/* Description Overlay */}
                     <div
-                      className={`absolute inset-x-0 bottom-0 z-30 h-[45%] transition-all duration-500 ease-out ${
+                      className={`absolute inset-x-0 bottom-0 z-30  pt-20 transition-all duration-500 ease-out ${
                         isActive
                           ? "translate-y-0 opacity-100"
                           : "translate-y-full opacity-0"
