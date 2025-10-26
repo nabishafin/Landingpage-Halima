@@ -79,7 +79,7 @@ export function TestimonialSection() {
               transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
               viewport={{ once: true, amount: 0.3 }}
             >
-              <div className="relative overflow-hidden rounded-3xl h-[520px] md:h-80">
+              <div className="relative overflow-hidden rounded-3xl h-full aspect-square">
                 <Image
                   src={pic}
                   alt="Bozoma St John"
