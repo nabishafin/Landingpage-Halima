@@ -135,7 +135,7 @@ export function ContactSection() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-black hover:bg-gray-800 text-white py-4 rounded-full text-base font-semibold"
+                className="w-full bg-black hover:bg-gray-800 text-white py-4 rounded-lg text-base font-semibold"
               >
                 {loading ? "Sending..." : "Send Message"}
               </Button>
@@ -171,8 +171,7 @@ export function ContactSection() {
                 Let's talk.
               </h1>
               <p className="text-sm sm:text-base md:text-lg text-gray-300">
-                Tell us about your project, whether it's a vlog, documentary, or
-                a TikTok short.
+                Tell us about your project, We'll take it from there.
               </p>
             </div>
 

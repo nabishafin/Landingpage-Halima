@@ -12,7 +12,7 @@ export function TestimonialSection() {
     { id: 1, number: 5000, suffix: "+", cardNumber: "01" },
     { id: 2, number: 98, suffix: "%", cardNumber: "02" },
     { id: 3, number: 423, suffix: "m+", cardNumber: "03" },
-    { id: 4, number: 470, suffix: "+", cardNumber: "04" },
+    { id: 4, number: 170, suffix: "+", cardNumber: "04" },
   ];
 
   const textStats = [

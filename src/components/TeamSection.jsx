@@ -120,7 +120,7 @@ const TeamSection = () => {
 
                 <a
                   href="mailto:people@thereinitiative.com?subject=&body="
-                  className="inline-block bg-black text-white hover:bg-black rounded-full px-8 py-3 text-base font-medium transition-colors"
+                  className="inline-block bg-black text-white hover:bg-black rounded-lg px-8 py-2 text-base font-medium transition-colors"
                 >
                   Join us
                 </a>
@@ -128,7 +128,7 @@ const TeamSection = () => {
             </motion.div>
 
             {/* Right Team Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 md:mt-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 mt-2 md:mt-12">
               {teamMembers.map((member) => (
                 <div key={member.id} className="relative group cursor-pointer">
                   <div className="relative w-full h-[520px] rounded-2xl overflow-hidden">
@@ -139,7 +139,7 @@ const TeamSection = () => {
                       className="object-cover"
                     />
                   </div>
-                  <div className="absolute bottom-4 left-4 text-white">
+                  <div className="absolute bottom-4 left-2 text-white">
                     <h3 className="text-lg font-bold">{member.name}</h3>
                     <p className="text-sm">{member.role}</p>
                   </div>

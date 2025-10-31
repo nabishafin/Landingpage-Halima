@@ -68,8 +68,8 @@ export function FaqSection() {
               FAQ.
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed">
-              Got questions? We've got answers. Here's everything you need to
-              know about working with us.
+              Got questions? We've got answers. Here are a few things you need
+              to know about working with us.
             </p>
           </motion.div>
 

@@ -57,11 +57,9 @@ export function HowWeWorkSection() {
           </h2>
 
           <p className="text-black text-[12px] md:text-[15px] leading-relaxed">
-            We power the growth engines of{" "}
-            <span className="font-semibold">creative brands</span> ready to
-            scale globally and sustainably, designing the systems that give
-            creative businesses the structure to grow intelligently and
-            sustainably.
+            We power the growth engines of <span> brands</span> ready to scale
+            globally and sustainably, designing the systems that give creative
+            businesses the structure to grow intelligently and sustainably.
           </p>
 
           <p className="text-[12px] md:text-[15px]">
@@ -89,7 +87,7 @@ export function HowWeWorkSection() {
               <p className="text-black mb-2 text-sm leading-relaxed text-[11px] md:text-[14px]">
                 {step.description}
               </p>
-              <p className="text-gray-400 italic text-[12px] md:text-[15px] ">
+              <p className="text-gray-800 italic text-[12px] md:text-[15px] ">
                 {step.powered}
               </p>
             </motion.div>
@@ -105,7 +103,7 @@ export function HowWeWorkSection() {
           >
             <Button
               onClick={() => router.push("/meeting")}
-              className="bg-black text-white hover:bg-black  border-[1px] border-black/50 w-40  py-3 rounded-full font-semibold flex items-center gap-2  transition"
+              className="bg-black text-white hover:bg-black  border-[1px] border-black/50 w-40  py-3 rounded-lg  font-semibold flex items-center gap-2  transition"
             >
               Enquire
             </Button>

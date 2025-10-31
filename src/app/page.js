@@ -32,7 +32,7 @@ export default function Home() {
         <TestimonialSection />
       </section>
 
-      <section>
+      <section className="bg-black">
         <StepsSection />
       </section>
 

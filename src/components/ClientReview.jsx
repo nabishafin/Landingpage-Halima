@@ -23,7 +23,7 @@ const ClientReview = ({ name, role, image, rating, testimonial, isCenter }) => {
         {[...Array(5)].map((_, i) => (
           <Star
             key={i}
-            className={`w-5 h-5 ${
+            className={`w-3 h-3 ${
               i < rating ? "fill-orange-400 text-orange-400" : "text-gray-300"
             }`}
           />
@@ -37,7 +37,7 @@ const ClientReview = ({ name, role, image, rating, testimonial, isCenter }) => {
           className="w-14 h-14 rounded-full object-cover"
         />
         <div className="flex-1">
-          <h3 className="font-semibold text-gray-900 text-lg">{name}</h3>
+          <h3 className=" text-gray-900 text-md">{name}</h3>
           <p className="text-gray-600 text-sm">{role}</p>
         </div>
         <button className="text-gray-400 hover:text-gray-600 transition-colors">
@@ -91,7 +91,7 @@ export default function ClientTestimonialsSection() {
   return (
     <section className="pt-10 pb-8 px-4 bg-gradient-to-b from-gray-50 to-white mt-16">
       <div className="w-full lg:w-11/12 mx-auto">
-        <h2 className="text-4xl font-bold text-gray-900 text-center mb-12 mt-10">
+        <h2 className="text-3xl font-bold text-gray-900 text-center mb-12 mt-10">
           What Our Clients Say.
         </h2>
 
@@ -104,20 +104,20 @@ export default function ClientTestimonialsSection() {
         <div className="flex justify-center flex-col">
           <button
             onClick={handleReviewClick}
-            className="w-full bg-gray-900 hover:bg-gray-800 text-white py-2 px-8 rounded-full text-lg font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+            className="w-full bg-gray-900 hover:bg-gray-800 text-white py-2 px-8 rounded-lg text-md font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
           >
             Leave us a review
           </button>
-          <button
+          {/* <button
             onClick={handleReviewClick}
-            className="w-full bg-gray-900 hover:bg-gray-800 mt-1 text-white py-2 px-8 rounded-full text-lg font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+            className="w-full bg-gray-900 hover:bg-gray-800 mt-1 text-white py-2 px-8 rounded-lg text-md font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
           >
             Google Reviews
-          </button>
+          </button> */}
         </div>
 
         <p className="text-center text-gray-600 text-sm mt-4">
-          Share your experience with us on Google
+          Check out our <span>Google Reviews</span>
         </p>
       </div>
     </section>
