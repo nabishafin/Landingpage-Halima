@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CirclePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Link as ScrollLink } from "react-scroll";
 
 export function HowWeWorkSection() {
   const router = useRouter();
@@ -87,9 +88,14 @@ export function HowWeWorkSection() {
               <p className="text-black mb-2 text-sm leading-relaxed text-[11px] md:text-[14px]">
                 {step.description}
               </p>
-              <p className="text-gray-800 italic text-[12px] md:text-[15px] ">
+              <ScrollLink
+                to="you"
+                smooth={true}
+                duration={800}
+                className="text-gray-800 italic text-[12px] md:text-[15px] cursor-pointer hover:underline"
+              >
                 {step.powered}
-              </p>
+              </ScrollLink>
             </motion.div>
           ))}
 

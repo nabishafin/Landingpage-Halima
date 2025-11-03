@@ -192,7 +192,7 @@ export function TestimonialSection() {
                     <CountUp
                       start={0}
                       end={inView ? stat.number : 0}
-                      duration={3}
+                      duration={40}
                       separator=","
                       suffix={stat.suffix}
                     />
