@@ -8,6 +8,7 @@ import team3 from "../../public/team-3.avif";
 import team4 from "../../public/team-4.jpg";
 import team5 from "../../public/team-5.jpg";
 import team6 from "../../public/team-6.avif";
+import { useState } from "react";
 
 const teamMembers = [
   {
@@ -61,6 +62,8 @@ const teamMembers = [
 ];
 
 const TeamSection = () => {
+  const [hoveredMember, setHoveredMember] = useState(null);
+
   const fadeUp = {
     hidden: { opacity: 0, y: 50 },
     visible: (i) => ({
@@ -130,18 +133,64 @@ const TeamSection = () => {
             {/* Right Team Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 mt-2 md:mt-12">
               {teamMembers.map((member) => (
-                <div key={member.id} className="relative group cursor-pointer">
-                  <div className="relative w-full h-[520px] rounded-2xl overflow-hidden">
+                <div
+                  key={member.id}
+                  className="relative group cursor-pointer overflow-hidden rounded-xl"
+                  onMouseEnter={() => setHoveredMember(member.id)}
+                  onMouseLeave={() => setHoveredMember(null)}
+                >
+                  {/* Image + Blur Overlay */}
+                  <div className="relative w-full h-[550px] md:h-[420px]">
                     <Image
                       src={member.image}
                       alt={member.name}
                       fill
-                      className="object-cover"
+                      className={`object-cover transition-all duration-500 ${
+                        hoveredMember === member.id
+                          ? "scale-110 blur-[2px]"
+                          : ""
+                      }`}
+                    />
+
+                    {/* Dark overlay */}
+                    <div
+                      className={`absolute inset-0 transition-opacity duration-500 ${
+                        hoveredMember === member.id ? "opacity-70" : "opacity-0"
+                      }`}
                     />
                   </div>
-                  <div className="absolute bottom-4 left-2 text-white">
-                    <h3 className="text-lg font-bold">{member.name}</h3>
-                    <p className="text-sm">{member.role}</p>
+
+                  {/* Name always visible */}
+                  <div className="absolute bottom-4 left-4 right-4 z-20">
+                    <h3 className="text-white text-xl md:text-2xl font-bold drop-shadow-lg">
+                      {member.name}
+                    </h3>
+                  </div>
+
+                  {/* Hover Description */}
+                  <div
+                    className={`absolute inset-x-0 bottom-0 transition-all duration-500 ease-out transform ${
+                      hoveredMember === member.id
+                        ? "translate-y-0 opacity-100"
+                        : "translate-y-full opacity-0"
+                    }`}
+                    style={{
+                      height: "40%",
+                    }}
+                  >
+                    <div className="absolute bottom-12 left-4 right-4 space-y-3 h-3/4 flex flex-col justify-end">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-2 h-2 bg-white rounded-full opacity-80" />
+                        <span className="text-white text-sm font-medium tracking-wide">
+                          {member.role}
+                        </span>
+                      </div>
+                      <div className="overflow-hidden">
+                        <p className="text-gray-200 font-[500] text-xs sm:text-sm leading-tight">
+                          {member.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
