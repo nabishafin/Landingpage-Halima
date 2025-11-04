@@ -117,7 +117,13 @@ export default function ClientTestimonialsSection() {
         </div>
 
         <p className="text-center text-gray-600 text-sm mt-4">
-          Check out our <span>Google Reviews</span>
+          Check out our{" "}
+          <span
+            onClick={handleReviewClick}
+            className="hover:underline font-semibold"
+          >
+            Google Reviews
+          </span>
         </p>
       </div>
     </section>

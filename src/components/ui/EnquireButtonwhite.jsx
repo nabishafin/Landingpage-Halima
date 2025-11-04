@@ -5,7 +5,7 @@ const EnquireButtonwhite = () => {
   return (
     <Link
       href="/meeting"
-      className="bg-black text-white border py-[6px] w-40 rounded-lg mt-5 border-white  md:w-40 mx-auto font-semibold
+      className="bg-black text-white border py-[6px] w-40 rounded-lg mt-5 border-gray-400  md:w-40 mx-auto font-semibold
                 
                  transition-colors duration-300 ease-in-out flex justify-center items-center"
     >

@@ -40,9 +40,9 @@ export function StepsSection() {
   ];
 
   return (
-    <section id="you" className="px-4 w-auto lg:w-11/12 mx-auto bg-black ">
+    <section id="you" className="px-4 w-auto lg:w-11/12 mx-auto ">
       {/* Top Section */}
-      <section className="flex items-center justify-center my-5 md:my-16">
+      <section className="flex items-center justify-center my-5 md:my-16 py-10">
         <div className="w-full mx-auto text-left md:text-center mt-6 ">
           <div className="flex items-center justify-start gap-1 mb-5 md:mb-16">
             <CirclePlus fill="white" className="w-6 h-6 text-white font-bold" />
@@ -66,18 +66,20 @@ export function StepsSection() {
             </span>
           </motion.h1> */}
           <motion.h1
-            className="text-3xl sm:text-4xl md:text-3xl lg:text-6xl font-[500] text-balance leading-tight mt-4 md:mt-0"
+            className="text-3xl  md:text-3xl lg:text-6xl font-[500] text-balance  mt-4 md:mt-0"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            <span className="text-[#686868]">We’re human,</span>
+            <span className="text-[#686868] font-semibold">We’re human,</span>
             <br />
-            <span className="text-[#686868] md:text-4xl">
+            <span className="text-[#686868] text-2xl md:text-4xl ">
               We don’t rush.
               <br />{" "}
-              <span className="text-white">We think. We build. We refine.</span>
+              <span className="text-white text-2xl md:text-4xl  ">
+                We think. We build. We refine.
+              </span>
             </span>
           </motion.h1>
         </div>
@@ -124,7 +126,7 @@ export function StepsSection() {
           {steps.map((step, index) => (
             <motion.div
               key={index}
-              className="bg-black p-3 sm:p-4 border rounded-xl text-left hover:shadow-lg transition-shadow duration-300 py-6"
+              className="bg-black p-3 sm:p-4 border border-gray-400 rounded-xl text-left hover:shadow-lg transition-shadow duration-300 py-6"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
@@ -155,12 +157,12 @@ export function StepsSection() {
               </div>
 
               {/* Step title */}
-              <h3 className="text-[20px] md:text-md font-[700] text-white mb-1 px-20 md:px-0">
+              <h3 className="text-[16px] md:text-[30px] font-[700] text-white mb-1 px-20 md:px-0">
                 {step.title}
               </h3>
 
               {/* Step text */}
-              <p className="text-[13px] md:text-md leading-snug font-medium text-white px-20 md:px-0">
+              <p className="text-[12px] md:text-md leading-snug  text-white px-20 md:px-0">
                 {step.text}
               </p>
             </motion.div>
