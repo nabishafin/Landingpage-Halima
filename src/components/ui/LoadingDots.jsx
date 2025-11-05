@@ -25,13 +25,13 @@ const LoadingDots = () => {
         className="block w-2 h-2 rounded-full bg-gray-500"
         variants={dotVariants}
         animate="animate"
-        transition={{ ...dotVariants.animate.transition, delay: 0.2 }}
+        transition={{ ...dotVariants.animate.transition, delay: 0.6 }}
       />
       <motion.span
         className="block w-2 h-2 rounded-full bg-gray-500"
         variants={dotVariants}
         animate="animate"
-        transition={{ ...dotVariants.animate.transition, delay: 0.4 }}
+        transition={{ ...dotVariants.animate.transition, delay: 0.8 }}
       />
     </motion.div>
   );
