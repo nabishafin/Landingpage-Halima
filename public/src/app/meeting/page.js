@@ -1,0 +1,999 @@
+"use client";
+import { useState, useEffect } from "react";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
+import {
+  Calendar,
+  Clock,
+  ChevronLeft,
+  ChevronRight,
+  ArrowLeft,
+} from "lucide-react";
+import LoadingDots from "@/components/ui/LoadingDots";
+import { AnimatePresence } from "framer-motion";
+
+const MeetingPage = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [isCalendarLoading, setIsCalendarLoading] = useState(true);
+  const [detectedCountry, setDetectedCountry] = useState("US"); // Default to US
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phoneNumber: "",
+    websiteURL: "",
+    whyInterested: "",
+    timeConfirmed: false,
+    additionalInfo: "",
+  });
+
+  const [questionnaireData, setQuestionnaireData] = useState({
+    brandDescription: "",
+    currentPriority: "",
+    businessStage: "",
+    budgetAllocated: "",
+  });
+
+  // Multiple timezone options
+  const [timezoneInfo, setTimezoneInfo] = useState({ name: "Europe/London" });
+
+  const timezones = [
+    { label: "Europe/London (GMT+0/+1)", value: "Europe/London" },
+    { label: "America/New_York (GMT-5/-4)", value: "America/New_York" },
+    { label: "America/Los_Angeles (GMT-8/-7)", value: "America/Los_Angeles" },
+    { label: "Europe/Paris (GMT+1/+2)", value: "Europe/Paris" },
+    { label: "Asia/Dubai (GMT+4)", value: "Asia/Dubai" },
+    { label: "Asia/Singapore (GMT+8)", value: "Asia/Singapore" },
+    { label: "Asia/Tokyo (GMT+9)", value: "Asia/Tokyo" },
+    { label: "Australia/Sydney (GMT+10/+11)", value: "Australia/Sydney" },
+  ];
+
+  const allTimeSlots = [
+    "9:00 AM",
+    "9:30 AM",
+    "10:00 AM",
+    "10:30 AM",
+    "11:00 AM",
+    "11:30 AM",
+    "12:00 PM",
+    "12:30 PM",
+    "1:00 PM",
+    "1:30 PM",
+    "2:00 PM",
+    "2:30 PM",
+    "3:00 PM",
+    "3:30 PM",
+    "4:00 PM",
+    "4:30 PM",
+    "5:00 PM",
+  ];
+
+  const [timeSlots, setTimeSlots] = useState(allTimeSlots);
+
+  useEffect(() => {
+    setIsCalendarLoading(true);
+    if (selectedDate) {
+      const now = new Date();
+      const isToday = selectedDate.toDateString() === now.toDateString();
+
+      if (isToday) {
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+
+        const filteredSlots = allTimeSlots.filter((time) => {
+          const [timePart, period] = time.split(" ");
+          let [hour, minute] = timePart.split(":").map(Number);
+
+          if (period === "PM" && hour !== 12) {
+            hour += 12;
+          }
+          if (period === "AM" && hour === 12) {
+            hour = 0;
+          }
+
+          if (hour > currentHour) {
+            return true;
+          }
+          if (hour === currentHour && minute >= currentMinute) {
+            return true;
+          }
+          return false;
+        });
+        setTimeSlots(filteredSlots);
+      } else {
+        setTimeSlots(allTimeSlots);
+      }
+    }
+    setIsCalendarLoading(false);
+  }, [selectedDate]);
+
+  const priorityOptions = [
+    "Establishing clarity and brand identity",
+    "Expanding visibility and growth",
+    "Scaling with structure and long-term systems",
+  ];
+
+  const businessStageOptions = [
+    "Idea / Pre-launch",
+    "Early-stage startup (0–2 years)",
+    "Growing brand (2–5 years)",
+    "Established business (5+ years)",
+  ];
+
+  const budgetOptions = [
+    "Yes, we have resources set aside",
+    "We are exploring options and planning budget",
+    "Not at this time",
+  ];
+
+  const isDateAvailable = (date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const maxDate = new Date();
+    maxDate.setDate(today.getDate() + 14);
+    maxDate.setHours(0, 0, 0, 0);
+
+    return date >= today && date <= maxDate;
+  };
+
+  const getDaysInMonth = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const days = [];
+
+    // Adjust firstDay to be 0 for Sunday, 1 for Monday, etc.
+    const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1; // Monday is 0, Sunday is 6
+
+    // Previous month days (fill leading empty cells)
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
+    for (let i = 0; i < adjustedFirstDay; i++) {
+      days.push({
+        day: daysInPrevMonth - adjustedFirstDay + i + 1,
+        isCurrentMonth: false,
+        isAvailable: false,
+      });
+    }
+
+    // Current month days
+    for (let i = 1; i <= daysInMonth; i++) {
+      const currentDate = new Date(year, month, i);
+      const isAvailable = isDateAvailable(currentDate);
+      days.push({
+        day: i,
+        isCurrentMonth: true,
+        isAvailable: isAvailable,
+      });
+    }
+
+    return days;
+  };
+
+  const formatMonth = (date) =>
+    date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+
+  const handlePrevMonth = () => {
+    setCurrentDate((prevDate) => {
+      const newDate = new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1);
+      const today = new Date();
+      const minDate = new Date(today.getFullYear(), today.getMonth(), 1);
+      return newDate >= minDate ? newDate : prevDate;
+    });
+  };
+
+  const handleNextMonth = () => {
+    setCurrentDate((prevDate) => {
+      const newDate = new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1);
+      const maxDate = new Date();
+      maxDate.setDate(maxDate.getDate() + 14);
+      const maxMonth = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
+      return newDate <= maxMonth ? newDate : prevDate;
+    });
+  };
+
+
+  const handleDateSelect = (day) => {
+    if (day.isCurrentMonth && day.isAvailable) {
+      const selected = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        day.day
+      );
+      setSelectedDate(selected);
+      setSelectedTime(null);
+      if (window.innerWidth < 1024) {
+        setShowTimePicker(true);
+      }
+    }
+  };
+
+  const handleTimeSelect = (time) => {
+    setSelectedTime(time);
+    setError("");
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const handleQuestionnaireChange = (field, value) => {
+    setQuestionnaireData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleNextPage = () => {
+    setError("");
+    if (!selectedDate || !selectedTime) {
+      setError("Please select both date and time.");
+      return;
+    }
+    setCurrentPage(2);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    // Validate form
+    if (!formData.name || !formData.email) {
+      setError("Please fill in Name and Email.");
+      return;
+    }
+
+    if (!formData.timeConfirmed) {
+      setError("Please confirm you've checked the time and timezone.");
+      return;
+    }
+
+    if (
+      !formData.phoneNumber ||
+      !formData.websiteURL ||
+      !formData.whyInterested
+    ) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
+    // Validate questionnaire
+    const wordCount = questionnaireData.brandDescription
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
+    if (wordCount < 10) {
+      setError("Please provide at least 10 words about your brand.");
+      return;
+    }
+
+    if (
+      !questionnaireData.currentPriority ||
+      !questionnaireData.businessStage ||
+      !questionnaireData.budgetAllocated
+    ) {
+      setError("Please answer all business information questions.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          date: selectedDate.toISOString(),
+          time: selectedTime,
+          timezone: timezoneInfo.name,
+          questionnaire: questionnaireData,
+        }),
+      });
+      const result = await response.json();
+      if (result.success) {
+        setSuccess(true);
+      } else {
+        setError("Failed to schedule meeting. Please try again.");
+      }
+    } catch {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatSelectedDate = () => {
+    if (!selectedDate) return "";
+    return selectedDate.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const handleBackToWebsite = () => {
+    window.location.href = "/";
+  };
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg
+              className="w-8 h-8 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Meeting Scheduled!
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Your meeting has been successfully scheduled. You&apos;ll receive a
+            confirmation email shortly.
+          </p>
+          <div className="space-y-3">
+            <button
+              onClick={() => {
+                setSuccess(false);
+                setCurrentPage(1);
+                setSelectedDate(null);
+                setSelectedTime(null);
+                setFormData({
+                  name: "",
+                  email: "",
+                  phoneNumber: "",
+                  websiteURL: "",
+                  whyInterested: "",
+                  timeConfirmed: false,
+                  additionalInfo: "",
+                });
+                setQuestionnaireData({
+                  brandDescription: "",
+                  currentPriority: "",
+                  businessStage: "",
+                  budgetAllocated: "",
+                });
+              }}
+              className="w-full bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900 font-semibold transition-colors"
+            >
+              Schedule Another Meeting
+            </button>
+            <button
+              onClick={handleBackToWebsite}
+              className="w-full flex items-center justify-center gap-2 text-gray-600 px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-50 font-semibold transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back to Website
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 py-8">
+      <div className="bg-white rounded-lg shadow-lg max-w-6xl w-full flex flex-col lg:flex-row min-h-[600px]">
+        {/* Left Sidebar */}
+        <div className="lg:w-80 p-6 border-r border-gray-300">
+          <div className="flex items-center gap-3 mb-6">
+            <button
+              onClick={handleBackToWebsite}
+              className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors text-sm font-semibold"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Website</span>
+            </button>
+          </div>
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex gap-2 items-center justify-center text-xl font-extrabold">
+              <div className="border-4 px-3 py-1.5 rounded-lg border-gray-800 text-base">
+                Re:
+              </div>
+              <div className="uppercase tracking-wider text-lg">Initiative</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-gray-700 mb-4 text-sm">
+            <Clock className="w-5 h-5" />
+            <span>20 min</span>
+          </div>
+          <p className="text-sm text-gray-800 mb-6">
+            Book a{" "}
+            <span className="font-semibold">free 20-min Google Meet call</span>{" "}
+            to learn more about Feedbird and get any of your questions answered.
+          </p>
+
+          <p className="text-sm text-gray-800 mb-6">
+            <span className="font-semibold ">Important:</span> Ensure you select
+            the correct AM/PM time to avoid mistakes, like 3am instead of 3pm.
+          </p>
+
+          {selectedDate && (
+            <div className="mb-6 p-4 bg-gray-100 border-l-4 border-gray-700 rounded-lg">
+              <p className="text-xs text-gray-700 mb-1">Selected Date</p>
+              <p className="font-bold text-gray-900 text-sm">
+                {formatSelectedDate()}
+              </p>
+              {selectedTime && (
+                <>
+                  <p className="text-xs text-gray-700 mt-2 mb-1">
+                    Selected Time
+                  </p>
+                  <p className="font-bold text-gray-900 text-sm">
+                    {selectedTime}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {timezoneInfo.name}
+                  </p>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+        {/* Right Content */}
+        <div className="flex-1 p-6">
+          {/* Page 1: Date & Time Selection */}
+          {currentPage === 1 && (
+            <>
+              <h2 className="text-xl font-bold text-gray-900 mb-6">
+                Select a Date & Time
+              </h2>
+
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg mb-6 text-sm">
+                  {error}
+                </div>
+              )}
+
+              <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 relative">
+                {/* Calendar Section */}
+                <div className="order-1 lg:order-1">
+                  <div className="flex items-center justify-between mb-4">
+                    <button
+                      onClick={handlePrevMonth}
+                      className="p-1 hover:bg-gray-100 rounded transition-colors"
+                    >
+                      <ChevronLeft className="w-4 h-4 text-gray-600" />
+                    </button>
+                    <h4 className="font-semibold text-gray-900 text-sm">
+                      {formatMonth(currentDate)}
+                    </h4>
+                    <button
+                      onClick={handleNextMonth}
+                      className="p-1 hover:bg-gray-100 rounded transition-colors"
+                    >
+                      <ChevronRight className="w-4 h-4 text-gray-600" />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-7 gap-1 mb-2">
+                    {["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"].map(
+                      (day) => (
+                        <div
+                          key={day}
+                          className="text-center text-xs font-semibold text-gray-600 py-1"
+                        >
+                          {day}
+                        </div>
+                      )
+                    )}
+                  </div>
+                  <div className="grid grid-cols-7 gap-1">
+                    {isCalendarLoading ? (
+                      <div className="col-span-7 flex justify-center items-center h-24">
+                        <LoadingDots />
+                      </div>
+                    ) : (
+                      getDaysInMonth(currentDate).map((day, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleDateSelect(day)}
+                          disabled={!day.isCurrentMonth || !day.isAvailable}
+                          className={`aspect-square flex items-center justify-center rounded-full text-sm font-medium transition-colors ${
+                            selectedDate?.getDate() === day.day &&
+                            selectedDate?.getMonth() === currentDate.getMonth() &&
+                            selectedDate?.getFullYear() === currentDate.getFullYear() &&
+                            day.isCurrentMonth &&
+                            day.isAvailable
+                              ? "bg-black text-white"
+                              : !day.isCurrentMonth
+                              ? "text-transparent cursor-default"
+                              : !day.isAvailable
+                              ? "text-gray-400 cursor-not-allowed"
+                              : "bg-gray-100 hover:bg-gray-300 text-gray-800 hover:text-white"
+                          }`}
+                        >
+                          {day.day}
+                        </button>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Timezone - Multiple timezone options */}
+                  <div className="mt-6">
+                    <label className="text-xs font-semibold mb-1 text-gray-900 flex items-center gap-1">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      Time zone
+                    </label>
+                    <select
+                      value={timezoneInfo.name}
+                      onChange={(e) =>
+                        setTimezoneInfo({ name: e.target.value })
+                      }
+                      className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                    >
+                      {timezones.map((tz) => (
+                        <option key={tz.value} value={tz.value}>
+                          {tz.label}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-xs text-gray-500 mt-1">
+                      All times are shown in your selected timezone
+                    </p>
+                  </div>
+                </div>
+
+                {/* Time Slots Section */}
+                <div className="order-2 lg:order-2">
+                  {/* Desktop View - Always show time slots */}
+                  <div className="hidden lg:block">
+                    {selectedDate ? (
+                      <div className="text-sm font-semibold text-gray-900 mb-4">
+                        {formatSelectedDate()}
+                      </div>
+                    ) : (
+                      <div className="text-sm text-gray-500 mb-4">
+                        Select a date to see available times
+                      </div>
+                    )}
+                    <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+                      {timeSlots.length > 0 ? (
+                        <AnimatePresence mode="wait">
+                          {timeSlots.map((time) =>
+                            selectedTime === time ? (
+                              <motion.div
+                                key={time}
+                                className="flex gap-2"
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 20 }}
+                                transition={{ duration: 0.3 }}
+                              >
+                                <div className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-gray-200 text-gray-800">
+                                  {time}
+                                </div>
+                                <button
+                                  onClick={handleNextPage}
+                                  className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-black text-white"
+                                >
+                                  Next
+                                </button>
+                              </motion.div>
+                            ) : (
+                              <motion.button
+                                key={time}
+                                onClick={() => handleTimeSelect(time)}
+                                disabled={!selectedDate}
+                                className={`w-full text-center px-3 py-2 border rounded-lg text-sm font-medium transition-colors
+                                ${
+                                  !selectedDate
+                                    ? "text-gray-400 cursor-not-allowed bg-gray-50 border-gray-200"
+                                    : "border-blue-200 bg-white text-gray-900 hover:bg-gray-50 hover:border-gray-400"
+                                }
+                              `}
+                                whileTap={{ scale: 0.95 }}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 20 }}
+                                transition={{ duration: 0.3 }}
+                              >
+                                {time}
+                              </motion.button>
+                            )
+                          )}
+                        </AnimatePresence>
+                      ) : (
+                        <div className="flex justify-center items-center h-full">
+                          <LoadingDots />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {showTimePicker && (
+                <div className="fixed inset-0 bg-white z-50 p-4 flex flex-col lg:hidden">
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <button
+                      onClick={() => setShowTimePicker(false)}
+                      className="flex items-center gap-1 text-gray-600"
+                    >
+                      <ChevronLeft className="w-4 h-4" /> Back
+                    </button>
+                    <div className="text-sm font-semibold text-gray-900">
+                      {formatSelectedDate()}
+                    </div>
+                    <div className="w-12"></div> {/* Spacer */}
+                  </div>
+
+                  {/* Time slots */}
+                  <div className="flex-1 overflow-y-auto space-y-2 pr-1">
+                    {timeSlots.length > 0 ? (
+                      <AnimatePresence mode="wait">
+                        {timeSlots.map((time) =>
+                          selectedTime === time ? (
+                            <motion.div
+                              key={time}
+                              className="flex gap-2"
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: 20 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              <div className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-gray-200 text-gray-800">
+                                {time}
+                              </div>
+                              <button
+                                onClick={handleNextPage}
+                                className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-black text-white"
+                              >
+                                Next
+                              </button>
+                            </motion.div>
+                          ) : (
+                            <motion.button
+                              key={time}
+                              onClick={() => {
+                                handleTimeSelect(time);
+                              }}
+                              className={`w-full text-center px-3 py-4 border rounded-lg text-sm font-medium transition-colors
+                        ${"border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:border-gray-400 hover:shadow-sm"}
+                    `}
+                              whileTap={{ scale: 0.95 }}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: 20 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              {time}
+                            </motion.button>
+                          )
+                        )}
+                      </AnimatePresence>
+                    ) : (
+                      <div className="flex justify-center items-center h-full">
+                        <LoadingDots />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Page 2: Form & Questions */}
+          {currentPage === 2 && (
+            <>
+              <div className="flex items-center gap-3 mb-4">
+                <button
+                  onClick={() => setCurrentPage(1)}
+                  className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4 text-gray-600" />
+                </button>
+                <h2 className="text-lg font-bold text-gray-900">
+                  Enter Details
+                </h2>
+              </div>
+
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg mb-4 text-sm">
+                  {error}
+                </div>
+              )}
+
+              <div className="space-y-5 max-w-2xl">
+                {/* Selected Time Display for Mobile */}
+                <div className="lg:hidden bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-blue-700 font-medium">
+                        Scheduled for:
+                      </p>
+                      <p className="text-sm font-bold text-blue-900">
+                        {formatSelectedDate()} at {selectedTime}
+                      </p>
+                      <p className="text-xs text-blue-600">
+                        {timezoneInfo.name}
+                      </p>
+                    </div>
+                    <Calendar className="w-5 h-5 text-blue-600" />
+                  </div>
+                </div>
+
+                {/* Basic Info */}
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-medium mb-1 text-gray-900">
+                      Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium mb-1 text-gray-900">
+                      Email *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-start gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="timeConfirmed"
+                        checked={formData.timeConfirmed}
+                        onChange={handleInputChange}
+                        className="mt-0.5 text-gray-800 focus:ring-gray-500"
+                      />
+                      <span className="text-xs text-gray-700">
+                        Please confirm you&apos;ve checked the time and timezone
+                        to avoid selecting a night-time slot by mistake (e.g., 3
+                        AM instead of 3 PM). *
+                      </span>
+                    </label>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium mb-1 text-gray-900">
+                      What&apos;s your phone number? *
+                    </label>
+                    <PhoneInput
+                      international
+                      defaultCountry="US"
+                      value={formData.phoneNumber}
+                      onChange={(value) =>
+                        setFormData({ ...formData, phoneNumber: value })
+                      }
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium mb-1 text-gray-900">
+                      Website URL (or link to your socials) *
+                    </label>
+                    <input
+                      type="url"
+                      name="websiteURL"
+                      value={formData.websiteURL}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium mb-1 text-gray-900">
+                      Why are you interested in a call? *
+                    </label>
+                    <textarea
+                      name="whyInterested"
+                      value={formData.whyInterested}
+                      onChange={handleInputChange}
+                      required
+                      rows={2}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                    />
+                  </div>
+                </div>
+
+                {/* Business Information */}
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3 text-base">
+                    Business Information
+                  </h3>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-medium mb-1.5 text-gray-900">
+                        Tell us a little about your brand. (10 words minimum) *
+                      </label>
+                      <textarea
+                        value={questionnaireData.brandDescription}
+                        onChange={(e) =>
+                          handleQuestionnaireChange(
+                            "brandDescription",
+                            e.target.value
+                          )
+                        }
+                        required
+                        rows={3}
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                        placeholder="Describe your brand, products/services, target audience, and what makes you unique..."
+                      />
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        {
+                          questionnaireData.brandDescription
+                            .trim()
+                            .split(/\s+/)
+                            .filter((word) => word.length > 0).length
+                        }{" "}
+                        words (minimum 10 required)
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium mb-1.5 text-gray-900">
+                        Which area best describes your current priority? *
+                      </label>
+                      <div className="space-y-1.5">
+                        {priorityOptions.map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2 cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name="currentPriority"
+                              value={option}
+                              checked={
+                                questionnaireData.currentPriority === option
+                              }
+                              onChange={(e) =>
+                                handleQuestionnaireChange(
+                                  "currentPriority",
+                                  e.target.value
+                                )
+                              }
+                              className="text-gray-800 focus:ring-gray-500"
+                              required
+                            />
+                            <span className="text-xs text-gray-700">
+                              {option}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium mb-1.5 text-gray-900">
+                        What stage is your business at? *
+                      </label>
+                      <div className="space-y-1.5">
+                        {businessStageOptions.map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2 cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name="businessStage"
+                              value={option}
+                              checked={
+                                questionnaireData.businessStage === option
+                              }
+                              onChange={(e) =>
+                                handleQuestionnaireChange(
+                                  "businessStage",
+                                  e.target.value
+                                )
+                              }
+                              className="text-gray-800 focus:ring-gray-500"
+                              required
+                            />
+                            <span className="text-xs text-gray-700">
+                              {option}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium mb-1.5 text-gray-900">
+                        Do you have a budget allocated for brand strategy and
+                        creative direction? *
+                      </label>
+                      <div className="space-y-1.5">
+                        {budgetOptions.map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2 cursor-pointer"
+                          >
+                            <input
+                              type="radio"
+                              name="budgetAllocated"
+                              value={option}
+                              checked={
+                                questionnaireData.budgetAllocated === option
+                              }
+                              onChange={(e) =>
+                                handleQuestionnaireChange(
+                                  "budgetAllocated",
+                                  e.target.value
+                                )
+                              }
+                              className="text-gray-800 focus:ring-gray-500"
+                              required
+                            />
+                            <span className="text-xs text-gray-700">
+                              {option}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="w-full bg-gray-800 text-white py-2.5 rounded-lg hover:bg-gray-900 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
+                >
+                  {loading ? "Scheduling..." : "Schedule Meeting"}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MeetingPage;
