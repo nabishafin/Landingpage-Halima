@@ -1,7 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import {
   Calendar,
   Clock,
@@ -9,6 +11,8 @@ import {
   ChevronRight,
   ArrowLeft,
 } from "lucide-react";
+import LoadingDots from "@/components/ui/LoadingDots";
+import { AnimatePresence } from "framer-motion";
 
 const MeetingPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,6 +23,7 @@ const MeetingPage = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [isCalendarLoading, setIsCalendarLoading] = useState(true);
   const [detectedCountry, setDetectedCountry] = useState("US"); // Default to US
 
   const [formData, setFormData] = useState({
@@ -75,6 +80,7 @@ const MeetingPage = () => {
   const [timeSlots, setTimeSlots] = useState(allTimeSlots);
 
   useEffect(() => {
+    setIsCalendarLoading(true);
     if (selectedDate) {
       const now = new Date();
       const isToday = selectedDate.toDateString() === now.toDateString();
@@ -107,6 +113,7 @@ const MeetingPage = () => {
         setTimeSlots(allTimeSlots);
       }
     }
+    setIsCalendarLoading(false);
   }, [selectedDate]);
 
   const priorityOptions = [
@@ -144,15 +151,16 @@ const MeetingPage = () => {
     const month = date.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const daysInPrevMonth = new Date(year, month, 0).getDate();
     const days = [];
 
-    // Previous month days
-    for (let i = 0; i < firstDay; i++) {
-      const prevMonthDay = daysInPrevMonth - firstDay + i + 1;
-      const prevMonthDate = new Date(year, month - 1, prevMonthDay);
+    // Adjust firstDay to be 0 for Sunday, 1 for Monday, etc.
+    const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1; // Monday is 0, Sunday is 6
+
+    // Previous month days (fill leading empty cells)
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
+    for (let i = 0; i < adjustedFirstDay; i++) {
       days.push({
-        day: prevMonthDay,
+        day: daysInPrevMonth - adjustedFirstDay + i + 1,
         isCurrentMonth: false,
         isAvailable: false,
       });
@@ -176,29 +184,24 @@ const MeetingPage = () => {
     date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
   const handlePrevMonth = () => {
-    const prevMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() - 1
-    );
-    const today = new Date();
-    const minDate = new Date(today.getFullYear(), today.getMonth());
-    if (prevMonth >= minDate) {
-      setCurrentDate(prevMonth);
-    }
+    setCurrentDate((prevDate) => {
+      const newDate = new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1);
+      const today = new Date();
+      const minDate = new Date(today.getFullYear(), today.getMonth(), 1);
+      return newDate >= minDate ? newDate : prevDate;
+    });
   };
 
   const handleNextMonth = () => {
-    const nextMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + 1
-    );
-    const maxDate = new Date();
-    maxDate.setDate(maxDate.getDate() + 14);
-    const maxMonth = new Date(maxDate.getFullYear(), maxDate.getMonth());
-    if (nextMonth <= maxMonth) {
-      setCurrentDate(nextMonth);
-    }
+    setCurrentDate((prevDate) => {
+      const newDate = new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1);
+      const maxDate = new Date();
+      maxDate.setDate(maxDate.getDate() + 14);
+      const maxMonth = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
+      return newDate <= maxMonth ? newDate : prevDate;
+    });
   };
+
 
   const handleDateSelect = (day) => {
     if (day.isCurrentMonth && day.isAvailable) {
@@ -466,7 +469,7 @@ const MeetingPage = () => {
                 </div>
               )}
 
-              <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8">
+              <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 relative">
                 {/* Calendar Section */}
                 <div className="order-1 lg:order-1">
                   <div className="flex items-center justify-between mb-4">
@@ -499,26 +502,34 @@ const MeetingPage = () => {
                     )}
                   </div>
                   <div className="grid grid-cols-7 gap-1">
-                    {getDaysInMonth(currentDate).map((day, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => handleDateSelect(day)}
-                        disabled={!day.isCurrentMonth || !day.isAvailable}
-                        className={`aspect-square flex items-center justify-center rounded-full text-sm font-medium transition-colors ${
-                          selectedDate?.getDate() === day.day &&
-                          day.isCurrentMonth &&
-                          day.isAvailable
-                            ? "bg-black text-white"
-                            : !day.isCurrentMonth
-                            ? "text-transparent cursor-default"
-                            : !day.isAvailable
-                            ? "text-gray-400 cursor-not-allowed"
-                            : "bg-gray-100 hover:bg-gray-800 text-gray-800 hover:text-white"
-                        }`}
-                      >
-                        {day.day}
-                      </button>
-                    ))}
+                    {isCalendarLoading ? (
+                      <div className="col-span-7 flex justify-center items-center h-24">
+                        <LoadingDots />
+                      </div>
+                    ) : (
+                      getDaysInMonth(currentDate).map((day, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleDateSelect(day)}
+                          disabled={!day.isCurrentMonth || !day.isAvailable}
+                          className={`aspect-square flex items-center justify-center rounded-full text-sm font-medium transition-colors ${
+                            selectedDate?.getDate() === day.day &&
+                            selectedDate?.getMonth() === currentDate.getMonth() &&
+                            selectedDate?.getFullYear() === currentDate.getFullYear() &&
+                            day.isCurrentMonth &&
+                            day.isAvailable
+                              ? "bg-black text-white"
+                              : !day.isCurrentMonth
+                              ? "text-transparent cursor-default"
+                              : !day.isAvailable
+                              ? "text-gray-400 cursor-not-allowed"
+                              : "bg-gray-100 hover:bg-gray-300 text-gray-800 hover:text-white"
+                          }`}
+                        >
+                          {day.day}
+                        </button>
+                      ))
+                    )}
                   </div>
 
                   {/* Timezone - Multiple timezone options */}
@@ -572,44 +583,60 @@ const MeetingPage = () => {
                       </div>
                     )}
                     <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
-                      {timeSlots.map((time) =>
-                        selectedTime === time ? (
-                          <div key={time} className="flex gap-2">
-                            <div className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-gray-200 text-gray-800">
-                              {time}
-                            </div>
-                            <button
-                              onClick={handleNextPage}
-                              className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-black text-white"
-                            >
-                              Next
-                            </button>
-                          </div>
-                        ) : (
-                          <button
-                            key={time}
-                            onClick={() => handleTimeSelect(time)}
-                            disabled={!selectedDate}
-                            className={`w-full text-center px-3 py-2 border rounded-lg text-sm font-medium transition-colors
-                            ${
-                              !selectedDate
-                                ? "text-gray-400 cursor-not-allowed bg-gray-50 border-gray-200"
-                                : "border-blue-200 bg-white text-gray-900 hover:bg-gray-50 hover:border-gray-400"
-                            }
-                          `}
-                          >
-                            {time}
-                          </button>
-                        )
+                      {timeSlots.length > 0 ? (
+                        <AnimatePresence mode="wait">
+                          {timeSlots.map((time) =>
+                            selectedTime === time ? (
+                              <motion.div
+                                key={time}
+                                className="flex gap-2"
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 20 }}
+                                transition={{ duration: 0.3 }}
+                              >
+                                <div className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-gray-200 text-gray-800">
+                                  {time}
+                                </div>
+                                <button
+                                  onClick={handleNextPage}
+                                  className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-black text-white"
+                                >
+                                  Next
+                                </button>
+                              </motion.div>
+                            ) : (
+                              <motion.button
+                                key={time}
+                                onClick={() => handleTimeSelect(time)}
+                                disabled={!selectedDate}
+                                className={`w-full text-center px-3 py-2 border rounded-lg text-sm font-medium transition-colors
+                                ${
+                                  !selectedDate
+                                    ? "text-gray-400 cursor-not-allowed bg-gray-50 border-gray-200"
+                                    : "border-blue-200 bg-white text-gray-900 hover:bg-gray-50 hover:border-gray-400"
+                                }
+                              `}
+                                whileTap={{ scale: 0.95 }}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 20 }}
+                                transition={{ duration: 0.3 }}
+                              >
+                                {time}
+                              </motion.button>
+                            )
+                          )}
+                        </AnimatePresence>
+                      ) : (
+                        <div className="flex justify-center items-center h-full">
+                          <LoadingDots />
+                        </div>
                       )}
                     </div>
                   </div>
-
-
                 </div>
               </div>
-
-
 
               {showTimePicker && (
                 <div className="fixed inset-0 bg-white z-50 p-4 flex flex-col lg:hidden">
@@ -629,34 +656,52 @@ const MeetingPage = () => {
 
                   {/* Time slots */}
                   <div className="flex-1 overflow-y-auto space-y-2 pr-1">
-                    {timeSlots.map((time) =>
-                      selectedTime === time ? (
-                        <div key={time} className="flex gap-2">
-                          <div className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-gray-200 text-gray-800">
-                            {time}
-                          </div>
-                          <button
-                            onClick={handleNextPage}
-                            className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-black text-white"
-                          >
-                            Next
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          key={time}
-                          onClick={() => {
-                            handleTimeSelect(time);
-                          }}
-                          className={`w-full text-center px-3 py-4 border rounded-lg text-sm font-medium transition-colors
-                        ${
-                          "border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:border-gray-400 hover:shadow-sm"
-                        }
+                    {timeSlots.length > 0 ? (
+                      <AnimatePresence mode="wait">
+                        {timeSlots.map((time) =>
+                          selectedTime === time ? (
+                            <motion.div
+                              key={time}
+                              className="flex gap-2"
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: 20 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              <div className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-gray-200 text-gray-800">
+                                {time}
+                              </div>
+                              <button
+                                onClick={handleNextPage}
+                                className="w-1/2 text-center px-3 py-2 border rounded-lg text-sm font-medium bg-black text-white"
+                              >
+                                Next
+                              </button>
+                            </motion.div>
+                          ) : (
+                            <motion.button
+                              key={time}
+                              onClick={() => {
+                                handleTimeSelect(time);
+                              }}
+                              className={`w-full text-center px-3 py-4 border rounded-lg text-sm font-medium transition-colors
+                        ${"border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:border-gray-400 hover:shadow-sm"}
                     `}
-                        >
-                          {time}
-                        </button>
-                      )
+                              whileTap={{ scale: 0.95 }}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: 20 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              {time}
+                            </motion.button>
+                          )
+                        )}
+                      </AnimatePresence>
+                    ) : (
+                      <div className="flex justify-center items-center h-full">
+                        <LoadingDots />
+                      </div>
                     )}
                   </div>
                 </div>
